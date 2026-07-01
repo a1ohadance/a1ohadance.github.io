@@ -1,0 +1,81 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 380" width="1200" height="380" role="img" aria-label="Decoding identity: 0x4l0ha, purple teamer and threat hunter at MyCERT">
+<defs>
+<style>
+text{font-family:ui-monospace,'SFMono-Regular',Menlo,Consolas,'Liberation Mono',monospace}
+.dim{fill:#7a7a82}.txt{fill:#e8e8ec}.red{fill:#ff003c}.cyan{fill:#00e5ff}.mag{fill:#ff35e0}.grn{fill:#36e27a}.pur{fill:#a855f7}
+.eye{font-size:15px;letter-spacing:2px}
+.code{font-size:16px;letter-spacing:.2px}
+.huge{font-size:58px;font-weight:800;letter-spacing:-1px}
+.lab{font-size:15px;letter-spacing:3px}
+.chip{font-size:13px;letter-spacing:1px;font-weight:700}
+@keyframes sweep{0%{transform:translateY(-24px)}100%{transform:translateY(384px)}}
+.sweep{animation:sweep 5.5s linear infinite}
+@keyframes blink{0%,49%{opacity:1}50%,100%{opacity:0}}
+.cur{animation:blink 1s steps(1) infinite}
+@keyframes jit{0%,90%,100%{transform:translate(0,0)}92%{transform:translate(-3px,1px)}95%{transform:translate(2px,-1px)}97%{transform:translate(-1px,0)}}
+.glitch{animation:jit 4.2s steps(1) infinite}
+@keyframes bar{0%,100%{transform:scaleY(.32)}50%{transform:scaleY(1)}}
+.bar{transform-box:fill-box;transform-origin:bottom center}
+.b1{animation:bar 1.1s ease-in-out infinite}
+.b2{animation:bar 1.1s ease-in-out .18s infinite}
+.b3{animation:bar 1.1s ease-in-out .36s infinite}
+.b4{animation:bar 1.1s ease-in-out .54s infinite}
+@keyframes dec{0%,100%{opacity:.3}50%{opacity:1}}
+.decode{animation:dec 3s ease-in-out infinite}
+@keyframes purpulse{0%,100%{opacity:.5}50%{opacity:1}}
+.eq{animation:purpulse 2.4s ease-in-out infinite}
+</style>
+<pattern id="scanw" width="3" height="3" patternUnits="userSpaceOnUse"><rect width="3" height="1" fill="#000" opacity="0.30"/></pattern>
+</defs>
+
+<rect width="1200" height="380" fill="#0a0a0c"/>
+<rect x="8" y="8" width="1184" height="364" rx="6" fill="none" stroke="#1b1b22"/>
+<line x1="636" y1="72" x2="636" y2="356" stroke="#1b1b22"/>
+
+<text class="dim eye" x="40" y="44">// DECODING IDENTITY · <tspan class="cyan">DECODING</tspan></text>
+<text class="dim eye" x="1160" y="44" text-anchor="end">whoami.bin</text>
+<line x1="24" y1="60" x2="1176" y2="60" stroke="#1b1b22"/>
+
+<g class="code">
+<text x="40" y="104"><tspan class="cyan">$</tspan> <tspan class="txt">whoami</tspan></text>
+<text x="40" y="132"><tspan class="grn">0x4l0ha</tspan> <tspan class="dim">· github a1ohadance</tspan></text>
+<text x="40" y="166"><tspan class="cyan">$</tspan> <tspan class="txt">cat /etc/identity</tspan></text>
+<text class="decode" x="40" y="198"><tspan class="dim">name </tspan> <tspan class="txt">Muhammad Fitri Mohd Sultan</tspan></text>
+<text x="40" y="226"><tspan class="dim">role </tspan> <tspan class="txt">purple teamer @ MyCERT</tspan></text>
+<text x="40" y="254"><tspan class="dim">ops  </tspan> <tspan class="txt">threat hunting · DFIR · bug hunting</tspan></text>
+<text x="40" y="282"><tspan class="dim">iot  </tspan> <tspan class="txt">Pi · Flipper · RFID · Wi-Fi</tspan></text>
+<text x="40" y="320"><tspan class="grn">[ OK ]</tspan> <tspan class="dim">identity decrypted</tspan> <tspan class="red cur">█</tspan></text>
+</g>
+
+<g transform="translate(672,150)">
+<g class="glitch">
+<text class="huge red" x="3" y="0" opacity="0.85">0x4l0ha</text>
+<text class="huge cyan" x="-3" y="0" opacity="0.85">0x4l0ha</text>
+<text class="huge txt" x="0" y="0">0x4l0ha</text>
+</g>
+<text class="lab dim" x="3" y="38">PURPLE TEAMER · THREAT HUNTER</text>
+
+<!-- purple team motif: red + blue = purple -->
+<g transform="translate(3,66)">
+<rect x="0" y="0" width="92" height="26" rx="4" fill="none" stroke="#ff003c"/>
+<text class="chip red" x="46" y="18" text-anchor="middle">RED TEAM</text>
+<text class="txt" x="104" y="18" font-size="16">+</text>
+<rect x="120" y="0" width="96" height="26" rx="4" fill="none" stroke="#00e5ff"/>
+<text class="chip cyan" x="168" y="18" text-anchor="middle">BLUE TEAM</text>
+<text class="txt eq" x="226" y="18" font-size="16">=</text>
+<rect x="242" y="0" width="86" height="26" rx="4" fill="rgba(168,85,247,0.12)" stroke="#a855f7"/>
+<text class="chip pur" x="285" y="18" text-anchor="middle">PURPLE</text>
+</g>
+
+<g transform="translate(3,112)">
+<rect class="cyan bar b1" x="0" y="0" width="7" height="22"/>
+<rect class="cyan bar b2" x="12" y="0" width="7" height="22"/>
+<rect class="cyan bar b3" x="24" y="0" width="7" height="22"/>
+<rect class="cyan bar b4" x="36" y="0" width="7" height="22"/>
+<text class="lab dim" x="56" y="17">SIGNAL: <tspan class="grn">ACTIVE</tspan></text>
+</g>
+</g>
+
+<rect width="1200" height="380" fill="url(#scanw)"/>
+<rect class="sweep" x="8" y="0" width="1184" height="16" fill="#00e5ff" opacity="0.06"/>
+</svg>

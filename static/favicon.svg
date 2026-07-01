@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <rect x="1" y="1" width="62" height="62" rx="15" fill="#0a0a0c"/>
+  <rect x="2" y="2" width="60" height="60" rx="13.5" fill="none" stroke="#00e5ff" stroke-width="1.5" opacity="0.5"/>
+  <g font-family="ui-monospace,'DejaVu Sans Mono',monospace" font-weight="800" font-size="37" text-anchor="middle">
+    <text x="33.6" y="45.5" fill="#ff003c">a1</text>
+    <text x="30.6" y="45.5" fill="#00e5ff">a1</text>
+    <text x="32" y="45.5" fill="#eafcff">a1</text>
+  </g>
+</svg>

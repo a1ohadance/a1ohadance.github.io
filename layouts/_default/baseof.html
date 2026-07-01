@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="{{ .Site.Language.Lang | default "en" }}">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#432e98">
+<!-- apply the saved palette before first paint (no colour flash) -->
+<script>(function(){try{var t=localStorage.getItem("a1oha-theme");if(t&&t!=="synth")document.documentElement.setAttribute("data-theme",t);}catch(e){}})();</script>
+<!-- PIXEL MODE: full-pixel skin, applied before first paint. ?pixel=on / ?pixel=off overrides the saved pref -->
+<script>(function(){try{var q=location.search,on=q.indexOf("pixel=on")>-1?1:(q.indexOf("pixel=off")>-1?0:(localStorage.getItem("a1oha-pixel")==="on"?1:0));if(on){document.documentElement.setAttribute("data-pixel","on");var l=document.createElement("link");l.id="pxfont";l.rel="stylesheet";l.href="https://fonts.googleapis.com/css2?family=VT323&family=Silkscreen:wght@400;700&display=swap";document.head.appendChild(l);}}catch(e){}})();</script>
+<!-- always revalidate the HTML so a new deploy is picked up immediately (the CSS/JS are still cache-busted by ?v=hash) -->
+<meta http-equiv="Cache-Control" content="no-cache, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<link rel="icon" href="{{ "favicon.ico" | relURL }}" sizes="any">
+<link rel="icon" type="image/svg+xml" href="{{ "favicon.svg" | relURL }}">
+<link rel="icon" type="image/png" sizes="32x32" href="{{ "favicon-32.png" | relURL }}">
+<link rel="icon" type="image/png" sizes="16x16" href="{{ "favicon-16.png" | relURL }}">
+<link rel="apple-touch-icon" href="{{ "apple-touch-icon.png" | relURL }}">
+<link rel="manifest" href="{{ "site.webmanifest" | relURL }}">
+<title>{{ block "title" . }}{{ if .IsHome }}{{ .Site.Title }}{{ else }}a1ohadance // {{ .Title }}{{ end }}{{ end }}</title>
+<meta name="description" content="{{ block "description" . }}{{ with .Description }}{{ . }}{{ else }}{{ with .Params.kicker }}{{ . }}: {{ end }}{{ .Site.Params.description }}{{ end }}{{ end }}">
+<link rel="stylesheet" href="{{ "assets/style.css" | relURL }}?v={{ crypto.MD5 (readFile "static/assets/style.css") }}">
+{{ if .IsHome -}}
+{{- /* preload the wallpaper layers so the scene + fireflies/window-lights start immediately, not after a lazy load */ -}}
+<link rel="preload" as="image" href="{{ "assets/wall/pl/sky.png" | relURL }}?v=5">
+<link rel="preload" as="image" href="{{ "assets/wall/pl/clouds.png" | relURL }}?v=5">
+<link rel="preload" as="image" href="{{ "assets/wall/pl/land.png" | relURL }}?v=5">
+{{ end -}}
+{{ range .AlternativeOutputFormats -}}
+<link rel="{{ .Rel }}" type="{{ .MediaType.Type }}" title="a1ohadance · RSS" href="{{ .Permalink }}">
+{{ end -}}
+{{- /* ===== social cards: Open Graph + Twitter ===== */ -}}
+{{- $ogtitle := cond .IsHome .Site.Title (printf "%s // a1ohadance" .Title) -}}
+{{- $ogdesc := .Site.Params.description -}}
+{{- with .Description }}{{ $ogdesc = . }}{{ else }}{{ with .Summary }}{{ $ogdesc = . | plainify }}{{ end }}{{ end -}}
+{{- $ogimg := "assets/og-default.png" | absURL -}}
+{{- with .Params.ogimage }}{{ $ogimg = . | absURL }}{{ end -}}
+<link rel="canonical" href="{{ .Permalink }}">
+<meta property="og:type" content="{{ if .IsPage }}article{{ else }}website{{ end }}">
+<meta property="og:site_name" content="a1ohadance // Fitri Sultan">
+<meta property="og:locale" content="en_US">
+<meta property="og:title" content="{{ $ogtitle }}">
+<meta property="og:description" content="{{ $ogdesc | truncate 200 }}">
+<meta property="og:url" content="{{ .Permalink }}">
+<meta property="og:image" content="{{ $ogimg }}">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="a1ohadance — Fitri Sultan · Threat Hunter & Researcher @ MyCERT">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="{{ $ogtitle }}">
+<meta name="twitter:description" content="{{ $ogdesc | truncate 200 }}">
+<meta name="twitter:image" content="{{ $ogimg }}">
+{{ block "head" . }}{{ end }}
+{{ if .IsHome }}<script>(function(){try{var rm=window.matchMedia&&matchMedia("(prefers-reduced-motion:reduce)").matches;if(!rm&&!sessionStorage.getItem("a1oha-booted")){document.documentElement.classList.add("booting");}sessionStorage.setItem("a1oha-booted","1");}catch(e){}})();</script>{{ end }}
+</head>
+<body{{ block "bodyclass" . }}{{ end }}>
+{{ if .IsHome }}
+  <!-- 8-bit boot sequence (first visit per session, skippable) -->
+  <div id="boot" aria-hidden="true"><div class="boot-box">
+    <div class="boot-title">a1ohadance.sys</div>
+    <div class="boot-log">
+      <span style="--bd:.05s"><i class="lbl">&gt; a1ohadance BIOS v4.0</i><i class="dl"></i><b>OK</b></span>
+      <span style="--bd:.17s"><i class="lbl">&gt; POST &middot; cpu &middot; mem &middot; gpu</i><i class="dl"></i><b>OK</b></span>
+      <span style="--bd:.29s"><i class="lbl">&gt; mounting /dev/wallpaper</i><i class="dl"></i><b>OK</b></span>
+      <span style="--bd:.41s"><i class="lbl">&gt; loading recon-globe.ko</i><i class="dl"></i><b>OK</b></span>
+      <span style="--bd:.53s"><i class="lbl">&gt; decrypting hall-of-fame</i><i class="dl"></i><b>OK</b></span>
+      <span style="--bd:.65s"><i class="lbl">&gt; sync bounty-ledger.db</i><i class="dl"></i><b>OK</b></span>
+      <span style="--bd:.77s"><i class="lbl">&gt; spawn threat-hunter</i><i class="dl"></i><b>OK</b></span>
+      <span style="--bd:.89s"><i class="lbl">&gt; load purple-team.ko</i><i class="dl"></i><b>OK</b></span>
+      <span style="--bd:1.01s"><i class="lbl">&gt; uplink KL &#8594; world</i><i class="dl"></i><b>OK</b></span>
+      <span style="--bd:1.13s"><i class="lbl">&gt; arm payloads &middot; safe</i><i class="dl"></i><b>OK</b></span>
+      <span style="--bd:1.34s"><i class="lbl">&gt; <b class="rdy">SYSTEM READY</b></i></span>
+    </div>
+    <div class="boot-bar"><i></i></div>
+    <div class="boot-skip">[ click anywhere to skip ]</div>
+  </div></div>
+{{ end }}
+
+  <!-- site-wide glitch background: datamosh blocks + pixel flicker (spawned by app.js, randomised) -->
+  <div class="page-fx" aria-hidden="true"></div>
+
+  <a class="skip-link" href="#main">skip to content</a>
+
+  <!-- ===================== HUD TOP BAR ===================== -->
+  <header class="hud">
+    <div class="wrap hud-inner">
+      <div class="hud-status">
+        <span class="tline">
+          <span class="tprompt"><span class="tp-root">root@</span>{{ .Site.Params.handle }}:~$</span>
+          <span class="cmds" aria-hidden="true"></span><span class="tcur" aria-hidden="true"></span>
+        </span>
+      </div>
+      <button class="nav-toggle" id="navToggle" type="button" aria-label="Open menu" aria-controls="primary-nav" aria-expanded="false">
+        <span class="nt-ico" aria-hidden="true"><i></i><i></i><i></i></span>
+        <span class="nt-label" aria-hidden="true"></span>
+      </button>
+      <nav id="primary-nav" aria-label="Primary">
+        <ul>
+          {{ $cur := .RelPermalink -}}
+          {{ $nav := slice
+              (dict "name" "home"       "url" "/"            "icon" "house"     "acc" "#00e5ff" "emoji" "🏠")
+              (dict "name" "whoami"     "url" "/whoami/"     "icon" "person"    "acc" "#a855f7" "emoji" "🕵️")
+              (dict "name" "write-ups"  "url" "/posts/"      "icon" "document"  "acc" "#36e27a" "emoji" "📝")
+              (dict "name" "experience" "url" "/experience/" "icon" "briefcase" "acc" "#ffb02e" "emoji" "💼")
+              (dict "name" "education"  "url" "/education/"   "icon" "cap"       "acc" "#36e27a" "emoji" "🎓")
+              (dict "name" "recognition" "url" "/badges/"     "icon" "trophy"    "acc" "#ffb02e" "emoji" "🏆")
+              (dict "name" "contact"    "url" "/contact/"    "icon" "letter"    "acc" "#ff35e0" "emoji" "✉️") -}}
+          {{ range $nav -}}
+            {{ $u := .url | relLangURL -}}
+            {{ $active := false -}}
+            {{ if eq .url "/" -}}
+              {{ if $.IsHome }}{{ $active = true }}{{ end -}}
+            {{ else if eq .url "/posts/" -}}
+              {{ if or (eq $cur $u) (eq $.Type "posts") }}{{ $active = true }}{{ end -}}
+            {{ else -}}
+              {{ if eq $cur $u }}{{ $active = true }}{{ end -}}
+            {{ end -}}
+          <li><a href="{{ $u }}"{{ if $active }} aria-current="page"{{ end }} style="--acc:{{ .acc }};--em:'{{ .emoji }}'"><span class="nav-ic" aria-hidden="true">{{ partial "pico-svg.html" .icon }}</span>{{ .name }}</a></li>
+          {{ end -}}
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main">
+    {{ block "main" . }}{{ end }}
+  </main>
+
+  {{ if not .IsHome }}<a class="home-fab" href="{{ "/" | relLangURL }}" aria-label="Home">{{ partial "pico-svg.html" "house" }}</a>{{ end }}
+
+  <!-- 8-bit sound-effects toggle -->
+  <button class="sfx-fab" id="sfxFab" type="button" aria-label="Toggle 8-bit sound effects" aria-pressed="true"><span class="sfx-ico" aria-hidden="true">♪</span></button>
+
+  <!-- ===================== FLOATING THEME SWITCHER ===================== -->
+  <button class="theme-fab" id="themeFab" type="button" aria-label="Change colour theme" aria-haspopup="true" aria-expanded="false" aria-controls="themePop">
+    <span class="tf-wheel" aria-hidden="true"></span>
+  </button>
+  <div class="theme-pop" id="themePop" role="menu" aria-label="Colour palettes">
+    <h4>// PALETTE</h4>
+    <div class="theme-grid">
+      <button type="button" data-theme-set="synth"   style="--p1:#ff35e0;--p2:#00e5ff;--p3:#ff003c"><span class="sw"></span>Default</button>
+      <button type="button" data-theme-set="dark"    style="--p1:#58a6ff;--p2:#bc8cff;--p3:#0e1116"><span class="sw"></span>Dark</button>
+      <button type="button" data-theme-set="light"   style="--p1:#c0249f;--p2:#0a8fb0;--p3:#ece7f3"><span class="sw"></span>Light</button>
+      <button type="button" data-theme-set="matrix"  style="--p1:#39ff14;--p2:#00e06a;--p3:#010602"><span class="sw"></span>Matrix</button>
+      <button type="button" data-theme-set="amber"   style="--p1:#ffb000;--p2:#ff8c1a;--p3:#120a02"><span class="sw"></span>Amber CRT</button>
+      <button type="button" data-theme-set="vapor"   style="--p1:#ff71ce;--p2:#2de2e6;--p3:#1a0b2e"><span class="sw"></span>Vaporwave</button>
+      <button type="button" data-theme-set="toxic"   style="--p1:#aaff00;--p2:#ccff00;--p3:#0a0f00"><span class="sw"></span>Toxic</button>
+      <button type="button" data-theme-set="redteam" style="--p1:#ff2b2b;--p2:#ff8a00;--p3:#120304"><span class="sw"></span>Red Team</button>
+    </div>
+    <button type="button" id="pixelToggle" class="pixel-toggle" role="menuitemcheckbox" aria-checked="false"><span class="px-ind" aria-hidden="true"></span> PIXEL MODE</button>
+  </div>
+  <div id="crtOverlay" aria-hidden="true"></div>
+
+  <!-- ===================== FOOTER ===================== -->
+  <footer>
+    <div class="wrap">
+      <p class="foot-glitch" data-text="// SIGNAL LOST">// S1GN&#65533;L L&#65533;ST_</p>
+      <p class="foot-meta">© {{ now.Year }} Fitri Sultan · a1ohadance · <span class="lost">// SIGNAL LOST</span></p>
+      <p class="foot-social">
+        <a href="https://github.com/a1ohadance" target="_blank" rel="noopener noreferrer" aria-label="GitHub" data-net="gh"><svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true"><path d="M12 .5C5.37.5 0 5.78 0 12.29c0 5.2 3.44 9.6 8.21 11.16.6.11.82-.25.82-.56v-2c-3.34.71-4.04-1.6-4.04-1.6-.55-1.36-1.33-1.72-1.33-1.72-1.09-.73.08-.72.08-.72 1.2.08 1.83 1.21 1.83 1.21 1.07 1.79 2.81 1.27 3.5.97.11-.76.42-1.27.76-1.56-2.67-.3-5.47-1.31-5.47-5.84 0-1.29.47-2.34 1.24-3.17-.13-.3-.54-1.52.12-3.18 0 0 1.01-.32 3.3 1.21a11.6 11.6 0 0 1 6 0c2.28-1.53 3.29-1.21 3.29-1.21.66 1.66.25 2.88.12 3.18.77.83 1.23 1.88 1.23 3.17 0 4.54-2.81 5.53-5.49 5.83.43.37.81 1.1.81 2.22v3.29c0 .31.21.68.83.56C20.57 21.88 24 17.49 24 12.29 24 5.78 18.63.5 12 .5z"/></svg>GitHub</a>
+        <a href="https://www.linkedin.com/in/ftrisultan" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn" data-net="li"><svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true"><path d="M20.45 20.45h-3.56v-5.57c0-1.33-.02-3.04-1.85-3.04-1.85 0-2.13 1.45-2.13 2.94v5.67H9.35V9h3.42v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28zM5.34 7.43a2.07 2.07 0 1 1 0-4.14 2.07 2.07 0 0 1 0 4.14zM7.12 20.45H3.56V9h3.56v11.45zM22.22 0H1.77C.79 0 0 .77 0 1.73v20.54C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.73V1.73C24 .77 23.2 0 22.22 0z"/></svg>LinkedIn</a>
+        <a href="mailto:ping@fitrisultan.my" aria-label="Email" data-net="mail"><svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true"><path d="M2 4.5h20c.55 0 1 .45 1 1v13c0 .55-.45 1-1 1H2c-.55 0-1-.45-1-1v-13c0-.55.45-1 1-1zm.7 2L12 12l9.3-5.5H2.7zM21.5 8.1l-9.5 5.6-9.5-5.6V18.5h19V8.1z"/></svg>Email</a>
+      </p>
+      <p class="foot-links">
+        <a href="{{ "tags/" | relLangURL }}">Tags</a>
+        <a href="{{ "credits/" | relLangURL }}">Credits</a>
+        <a href="{{ "disclaimer/" | relLangURL }}">Disclaimer</a>
+        {{ with .OutputFormats.Get "rss" }}<a class="ext" href="{{ .RelPermalink }}">RSS</a>{{ else }}<a class="ext" href="{{ "index.xml" | relLangURL }}">RSS</a>{{ end }}
+        <a class="ext" href="{{ .Site.Params.notion }}" target="_blank" rel="noopener noreferrer">WRITE-UP</a>
+      </p>
+    </div>
+  </footer>
+
+  <script src="{{ "assets/app.js" | relURL }}?v={{ crypto.MD5 (readFile "static/assets/app.js") }}"></script>
+</body>
+</html>

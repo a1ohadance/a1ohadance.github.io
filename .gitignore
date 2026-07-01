@@ -1,0 +1,8 @@
+/public/
+/resources/
+.hugo_build.lock
+.DS_Store
+
+# dev-only samples (local testing, not deployed)
+/static/samples/
+/static/assets/psample/

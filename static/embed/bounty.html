@@ -1,0 +1,585 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="format-detection" content="telephone=no,date=no,address=no,email=no">
+<title>Thermal POS Receipt (Pro) · WIDE PAGE-9 Beeper (landscape LCD chart) + Receipt — a1ohadance</title>
+<style>
+  @font-face{font-family:"Press Start 2P";font-display:swap;src:url(/assets/fonts/press-start-2p.woff2) format("woff2")}
+  @font-face{font-family:"Hack";font-display:swap;src:url(/assets/fonts/hack.woff2) format("woff2")}
+  @font-face{font-family:"Hack";font-weight:700;font-display:swap;src:url(/assets/fonts/hack-bold.woff2) format("woff2")}
+  *{box-sizing:border-box}
+  :root{
+    --pink:#ff5aa0;--purple:#A266D7;--purple2:#573BC1;--peach:#ffb38a;
+    --gold:#ffd23a;--off:#f7f9ff;--cy:#00e5ff;--ink:#190c30;--up:#36e27a;
+    --lcd:#9bbc0f;--lcd2:#8bac0f;--lcdmid:#306230;--lcdink:#0f380f;
+    --paper:#f4efe2;--pink-ink:#1c140d;
+    /* professional receipt palette */
+    --ink2:#241c12;        /* headers / dividers — dark ink */
+    --paid:#2e7d32;        /* credit / PAID — forest green */
+    --teal:#2e6f7e;        /* Compass Security — deep slate-teal */
+    --indigo:#4f5a73;      /* Self-Hosted — muted graphite-indigo */
+    --redact:#1d160e       /* redaction bar — near-black */
+  }
+  html,body{margin:0;min-height:100%;background:transparent;color:#e8def5;font-family:"Hack",ui-monospace,monospace;overflow-x:hidden}
+  .wrap{position:relative;z-index:1;max-width:980px;margin:0 auto;padding:6px 14px 14px}
+  h1.pg{font-family:"Press Start 2P";font-size:13px;color:#fff;text-shadow:-1.5px 0 var(--pink),1.5px 0 var(--purple);margin:.2rem 0 .5rem;line-height:1.5}
+  p.lead{font-size:12.5px;color:#f0e2f5;line-height:1.65;margin:0 0 24px}
+  p.lead b{color:var(--gold)}
+  p.lead .use{color:var(--gold)}
+
+  .sec-kicker{font-family:"Press Start 2P",monospace;font-size:.6rem;letter-spacing:.05em;color:#ffd23a;text-transform:uppercase;display:block;margin-bottom:.65rem;text-align:center;line-height:1.6;text-shadow:0 2px 8px rgba(8,4,16,.95),0 0 3px rgba(8,4,16,.85)}
+  .sec-title{font-family:"Press Start 2P";font-size:clamp(1rem,3.4vw,1.5rem);color:#fff;margin:0 0 1.2rem;text-shadow:2px 2px 0 var(--purple2),-1px 0 var(--pink),0 3px 12px rgba(8,4,16,.9);text-align:center}
+
+  /* ============================================================
+     WIDE / LANDSCAPE PAGE-9 BEEPER (the pager's own purple shell, stretched
+     to the GLOBAL RECOGNITION console width — no Nintendo Switch, no joy-cons)
+     ============================================================ */
+  .be-pager{position:relative;width:min(940px,100%);margin:22px auto 0;border-radius:18px 18px 26px 26px;padding:16px 20px 16px;
+    background:linear-gradient(180deg,#c569c8,#8a45b8 52%,#5f3098);
+    box-shadow:
+      inset 0 2px 0 rgba(255,255,255,.28),
+      inset 0 0 0 2px rgba(255,90,160,.45),
+      inset 0 0 0 5px rgba(28,14,52,.6),
+      0 8px 22px rgba(0,0,0,.26);
+    transform-origin:50% 50%}
+  .be-pager.buzz{animation:buzz .5s cubic-bezier(.36,.07,.19,.97)}
+  @keyframes buzz{
+    0%,100%{transform:translate(0,0) rotate(0)}
+    10%{transform:translate(-2px,1px) rotate(-.4deg)}
+    25%{transform:translate(2px,-1px) rotate(.4deg)}
+    40%{transform:translate(-2px,1px) rotate(-.3deg)}
+    55%{transform:translate(2px,-1px) rotate(.3deg)}
+    70%{transform:translate(-1px,1px) rotate(-.15deg)}
+    85%{transform:translate(1px,0) rotate(.15deg)}}
+
+  /* belt clip at the top */
+  .clip{position:absolute;top:-14px;left:50%;transform:translateX(-50%);width:140px;height:17px;border-radius:7px 7px 3px 3px;
+    background:linear-gradient(180deg,#3a2363,#241140);
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.18),inset 0 -3px 6px rgba(0,0,0,.4),0 3px 0 rgba(0,0,0,.4);z-index:0}
+  .clip::after{content:"";position:absolute;left:50%;bottom:3px;transform:translateX(-50%);width:70px;height:4px;border-radius:3px;background:rgba(0,0,0,.35)}
+
+  /* top chrome strip: LED + brand + tag */
+  .pg-top{display:flex;align-items:center;gap:10px;padding:4px 2px 12px}
+  .led{flex:none;width:11px;height:11px;border-radius:50%;background:#7a2b16;box-shadow:inset 0 0 0 1px rgba(0,0,0,.4);transition:background .12s,box-shadow .12s}
+  .led.idle{animation:ledidle 2s steps(1) infinite}
+  @keyframes ledidle{0%,92%{background:#7a2b16;box-shadow:inset 0 0 0 1px rgba(0,0,0,.4)}94%,98%{background:#ff5a3a;box-shadow:0 0 9px #ff6a3a}}
+  .led.hot{background:#ff5a3a;box-shadow:0 0 12px #ff7a4a,0 0 4px #fff;animation:none}
+  .brand{font-family:"Press Start 2P";font-size:8px;color:#fff;letter-spacing:.04em;text-shadow:0 1px 0 rgba(0,0,0,.4)}
+  .ptag{margin-left:auto;font-family:"Press Start 2P";font-size:7px;color:#2a113f;background:var(--peach);border-radius:4px;padding:4px 7px;letter-spacing:.1em;box-shadow:inset 0 1px 0 rgba(255,255,255,.4),0 1px 0 rgba(0,0,0,.3)}
+
+  /* ============ the WIDE pea-green LCD (centerpiece across the device) ============ */
+  .lcd{position:relative;display:flex;flex-direction:column;border-radius:7px;overflow:hidden;padding:11px 14px 13px;
+    background:linear-gradient(180deg,var(--lcd),var(--lcd2));
+    box-shadow:inset 0 0 0 3px #1e2a08,inset 0 0 0 6px #3a4d12,inset 0 0 22px rgba(15,56,15,.45);
+    color:var(--lcdink)}
+  .lcd-scan{position:absolute;inset:0;pointer-events:none;z-index:3;
+    background:repeating-linear-gradient(0deg,rgba(15,56,15,.16) 0 1.5px,transparent 1.5px 3px);opacity:.55}
+  .lcd>*{position:relative;z-index:2}
+
+  /* LCD header: INCOMING/REC scrolling tag + signal bars + msg no */
+  .lcd-head{display:flex;align-items:center;gap:9px;font-family:"Press Start 2P";font-size:7px;letter-spacing:.06em;color:var(--lcdink);
+    border-bottom:1.5px dashed rgba(15,56,15,.45);padding-bottom:8px;margin-bottom:10px}
+  .lcd-msg{flex:1 1 auto;min-width:0;font-family:"Hack",monospace;font-weight:700;font-size:.66rem;letter-spacing:.02em;
+    white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--lcdink);
+    background:rgba(15,56,15,.09);border:1.5px solid rgba(15,56,15,.4);border-radius:3px;padding:3px 8px}
+  .lcd-msg.in{animation:msgin .5s cubic-bezier(.2,1,.3,1)}
+  @keyframes msgin{0%{transform:translateY(110%);opacity:0}55%{opacity:1}100%{transform:translateY(0);opacity:1}}
+  .lcd-msg .lk{font-size:.82em;margin-right:3px}
+  .lcd-msg .plus{margin-left:8px;font-weight:700}
+  .lcd-head .sig{flex:none;display:flex;align-items:flex-end;gap:2px}
+  .lcd-head .sig i{width:3px;background:var(--lcdink);display:block}
+  .lcd-head .sig i:nth-child(1){height:4px}
+  .lcd-head .sig i:nth-child(2){height:6px}
+  .lcd-head .sig i:nth-child(3){height:8px}
+  .lcd-head .sig i:nth-child(4){height:10px;opacity:.35}
+  .lcd-head .msgno{flex:none;font-size:7px;color:#2c4d12}
+
+  /* ============ LANDSCAPE body: balance readout LEFT, chart RIGHT ============ */
+  .lcd-body{display:flex;gap:16px;align-items:stretch}
+  .lcd-col{min-width:0;display:flex;flex-direction:column;justify-content:center}
+  .lcd-readout{flex:0 0 38%}
+  .lcd-graph{flex:1}
+
+  .lcd-ballbl{font-family:"Hack",monospace;font-size:.58rem;letter-spacing:.24em;text-transform:uppercase;color:#2c4d12}
+  .lcd-bal{font-family:"Press Start 2P";font-size:clamp(1.6rem,4.4vw,2.4rem);line-height:1.16;margin:.34rem 0 .2rem;color:var(--lcdink);
+    text-shadow:1px 1px 0 rgba(155,188,15,.85),-1px -1px 0 rgba(15,56,15,.18);font-variant-numeric:tabular-nums}
+  .lcd-myr{font-family:"Hack",monospace;font-size:.84rem;font-weight:700;color:#1f3a0c}
+  .lcd-myr b{color:var(--lcdink)}
+
+  .lcd-goal{margin:14px 0 2px}
+  .lcd-bar{position:relative;height:13px;border:2px solid var(--lcdink);border-radius:2px;background:rgba(15,56,15,.1);overflow:hidden}
+  .lcd-bar i{display:block;height:100%;width:0;background:var(--lcdink);transition:width 1s cubic-bezier(.2,1,.3,1)}
+  .lcd-bar::after{content:"";position:absolute;inset:0;pointer-events:none;
+    background:repeating-linear-gradient(90deg,transparent 0 9px,rgba(155,188,15,.6) 9px 11px)}
+  .lcd-gtxt{display:flex;justify-content:space-between;gap:8px;font-family:"Hack",monospace;font-weight:700;font-size:.6rem;color:#23400e;margin-top:6px;letter-spacing:.03em}
+
+  /* ---- the cumulative LINE CHART (full landscape height on the right) ---- */
+  .lcd-chart{position:relative;flex:1;display:flex;flex-direction:column;border:1.5px solid rgba(15,56,15,.4);border-radius:3px;
+    background:rgba(15,56,15,.06);padding:6px 8px 4px;overflow:hidden}
+  .lcd-chart .ch-lbl{display:flex;align-items:center;gap:5px;font-family:"Hack",monospace;font-weight:700;
+    font-size:.54rem;letter-spacing:.16em;text-transform:uppercase;color:#2c4d12;margin:0 1px 4px}
+  .lcd-chart .ch-lbl .rec{margin-left:auto;display:flex;align-items:center;gap:4px}
+  .lcd-chart .ch-lbl .rec i{width:5px;height:5px;background:var(--lcdink);display:block;animation:recp 1s steps(2) infinite}
+  @keyframes recp{0%{opacity:1}50%{opacity:.15}100%{opacity:1}}
+  .lcd-chart svg{display:block;width:100%;height:auto;flex:1;min-height:128px;shape-rendering:crispEdges}
+  .grid{stroke:rgba(15,56,15,.4);stroke-width:1.2;stroke-dasharray:2 2}
+  .baseline{stroke:rgba(15,56,15,.6);stroke-width:1.4}
+  .target{stroke:var(--lcdink);stroke-width:1.4;stroke-dasharray:4 3;opacity:.9}
+  #chCursor{animation:curblink .7s steps(2) infinite}
+  @keyframes curblink{0%{opacity:1}50%{opacity:.18}100%{opacity:1}}
+  .axl{fill:#2c4d12;font-family:"Press Start 2P";font-size:6px}
+  .tgl{fill:var(--lcdink);font-family:"Press Start 2P";font-size:5.5px;opacity:.92}
+
+  /* ============ pager controls along the bottom (speaker + buttons) ============ */
+  .pg-ctl{display:flex;align-items:center;gap:12px;padding:14px 2px 2px}
+  .speaker{flex:none;display:grid;grid-template-columns:repeat(6,4px);grid-auto-rows:4px;gap:3px;padding:6px 7px;border-radius:6px;
+    background:rgba(28,14,52,.32);box-shadow:inset 0 1px 0 rgba(255,255,255,.12)}
+  .speaker b{width:4px;height:4px;border-radius:50%;background:#2a1542;box-shadow:inset 0 0 0 1px rgba(0,0,0,.3)}
+  .btns{margin-left:auto;display:flex;align-items:center;gap:8px}
+  .btn{font-family:"Press Start 2P";font-size:7px;color:#3a1a52;letter-spacing:.04em;padding:8px 11px;border-radius:6px;
+    background:linear-gradient(180deg,#ffd0a8,#f3a274);box-shadow:inset 0 1px 0 rgba(255,255,255,.5),0 2px 0 #b96a4f,0 3px 4px rgba(0,0,0,.35)}
+  .btn.read{background:linear-gradient(180deg,#ffe27a,#ffcf3a);box-shadow:inset 0 1px 0 rgba(255,255,255,.6),0 2px 0 #b08416,0 3px 4px rgba(0,0,0,.35);color:#5a3705}
+  .btn.rnd{width:24px;height:24px;border-radius:50%;padding:0;display:flex;align-items:center;justify-content:center}
+
+  /* ============ THERMAL POS receipt feed (centered below the pager) ============ */
+  .printwrap{max-width:500px;margin:32px auto 0}
+  .printer{position:relative;z-index:2;border-radius:12px 12px 6px 6px;padding:11px 14px 0;
+    background:linear-gradient(180deg,#c569c8,#8a45b8 55%,#5f3098);
+    box-shadow:inset 0 2px 0 rgba(255,255,255,.28),inset 0 0 0 2px rgba(255,90,160,.45),inset 0 0 0 5px rgba(28,14,52,.6),0 5px 14px rgba(0,0,0,.2)}
+  .pr-top{display:flex;align-items:center;gap:8px;padding:3px 2px 11px}
+  .pr-slot{height:12px;margin:0 -14px;background:linear-gradient(180deg,#140a22,#241038);
+    box-shadow:inset 0 4px 7px rgba(0,0,0,.7),inset 0 -1px 0 rgba(255,255,255,.06)}
+
+  .paper{position:relative;z-index:1;width:calc(100% - 22px);margin:-4px auto 16px;
+    padding:15px 17px 17px;color:#2a2117;font-family:"Hack",ui-monospace,monospace;
+    background-color:var(--paper);
+    background-image:repeating-linear-gradient(0deg,rgba(60,45,25,.055) 0 1px,transparent 1px 5px),
+      radial-gradient(120% 70% at 50% 0%,rgba(0,0,0,.07),transparent 55%);
+    box-shadow:0 6px 16px rgba(0,0,0,.22),inset 0 0 0 1px rgba(0,0,0,.05)}
+  .paper::before{content:"";position:absolute;left:0;right:0;top:0;height:12px;
+    background:linear-gradient(180deg,rgba(0,0,0,.17),transparent);pointer-events:none}
+  /* torn perforated bottom edge */
+  .paper::after{content:"";position:absolute;left:0;right:0;top:100%;height:11px;
+    background:linear-gradient(45deg,transparent 50%,var(--paper) 50%),
+      linear-gradient(-45deg,transparent 50%,var(--paper) 50%);
+    background-size:13px 11px;background-repeat:repeat-x;
+    filter:drop-shadow(0 7px 7px rgba(0,0,0,.35))}
+  .receipt-inner{position:relative}
+  .receipt-inner.feed{animation:feed .24s steps(3)}
+  @keyframes feed{0%{transform:translateY(-7px)}100%{transform:translateY(0)}}
+
+  /* printable line: print-head clip-wipe + sweeping head bar */
+  .pl{position:relative}
+  .hide{display:none!important}
+  .pl.on{animation:headwipe .42s steps(12) both}
+  @keyframes headwipe{from{clip-path:inset(0 100% 0 0)}to{clip-path:inset(0 0 0 0)}}
+  .pl.on::after{content:"";position:absolute;top:-2px;bottom:-2px;width:3px;
+    background:rgba(28,20,13,.85);box-shadow:0 0 4px rgba(0,0,0,.5);pointer-events:none;opacity:0;
+    animation:headbar .42s steps(12) both}
+  @keyframes headbar{0%{left:-1px;opacity:1}90%{opacity:1}100%{left:100%;opacity:0}}
+
+  /* CLEAN CENTERED STACKED letterhead — block lines, no columns, nothing overlaps */
+  .rc-brand{display:block;width:100%;text-align:center;font-family:"Press Start 2P";font-size:7px;letter-spacing:.12em;color:#362a19;
+    padding:5px 0;margin:1px 0 8px;border-top:1px solid rgba(36,28,18,.45);border-bottom:1px solid rgba(36,28,18,.45)}
+  .rc-title{display:block;width:100%;font-family:"Press Start 2P";font-size:12px;text-align:center;color:var(--ink2);letter-spacing:.04em;margin:8px 0 6px;line-height:1.5}
+  .rc-sub{display:block;width:100%;text-align:center;font-size:9.5px;font-weight:700;letter-spacing:.22em;color:#42361f;text-transform:uppercase;margin:0 0 3px}
+  .rc-div{height:0;border-top:2px dashed rgba(36,28,18,.5);margin:9px 0}
+  .rc-div.dbl{border-top:3px double rgba(36,28,18,.7);margin:11px 0 9px}
+
+  /* line A: PAID <redaction bar> <logo + platform> */
+  .r{display:flex;align-items:baseline;gap:9px;font-size:11.5px;margin:6px 0 1px;letter-spacing:.01em}
+  .r-l{display:inline-flex;flex-wrap:wrap;align-items:center;gap:6px;min-width:0}
+  .r-tag{color:var(--paid);font-weight:700;text-transform:uppercase;letter-spacing:.05em}
+  .r-plat{display:inline-flex;align-items:center;color:var(--acc,#5a4a36);font-weight:700;font-size:.92em;
+    text-transform:uppercase;letter-spacing:.05em}
+  .plogo{flex:none;width:14px;height:14px;margin-right:5px}
+
+  /* classified redaction bar — censored-document style */
+  .redact{display:inline-flex;align-items:center;gap:5px;background:var(--redact);color:#e8e0d0;
+    font-weight:700;font-size:.72em;letter-spacing:.18em;text-transform:uppercase;padding:3px 9px;border-radius:3px;
+    box-shadow:inset 0 0 0 1px rgba(0,0,0,.5),0 1px 0 rgba(255,255,255,.16);position:relative;top:-1px}
+  .redact .rlk{font-size:1em;letter-spacing:0}
+
+  /* line B: native -> USD -> MYR, indented + columnar */
+  .rb{display:grid;grid-template-columns:60px 16px 64px 16px auto;align-items:baseline;
+    font-size:11px;font-weight:700;letter-spacing:.01em;padding-left:24px;margin:0 0 6px}
+  .rb .ar{color:#9a8b72;text-align:center}
+  .rb .c-nat{color:#3a2f20}
+  .rb .c-usd{color:var(--paid)}
+  .rb .c-myr{color:#3a2f20}
+
+  .ldr{display:flex;align-items:baseline;gap:7px;font-size:11.5px;color:#3a2f20;font-weight:700;letter-spacing:.02em;text-transform:uppercase;margin:3px 0}
+  .ldr i{flex:1;border-bottom:2px dotted rgba(36,28,18,.4);transform:translateY(-3px)}
+  .ldr span:last-child{white-space:nowrap}
+  #subRow{color:#362a19;font-size:11px}
+  .ldr.big{font-size:15px;color:var(--ink2);margin:5px 0}
+  .ldr.big i{border-bottom-color:rgba(36,28,18,.55)}
+  .grn{color:var(--paid)}
+
+  .rc-thanks{text-align:center;font-family:"Press Start 2P";font-size:8px;color:var(--ink2);letter-spacing:.1em;margin:10px 0 8px}
+  .barcode{height:34px;margin:4px 6px 4px;background-color:var(--paper);
+    background-image:repeating-linear-gradient(90deg,
+      #1c140d 0 2px,var(--paper) 2px 4px,
+      #1c140d 4px 7px,var(--paper) 7px 8px,
+      #1c140d 8px 9px,var(--paper) 9px 12px,
+      #1c140d 12px 14px,var(--paper) 14px 17px,
+      #1c140d 17px 18px,var(--paper) 18px 21px)}
+  .rc-bcnum{text-align:center;font-size:10px;letter-spacing:.34em;color:#2a2117;margin-top:2px}
+
+  /* ============ footer strip + footnote ============ */
+  .combo-foot{max-width:500px;margin:16px auto 0;display:flex;align-items:center;gap:9px;flex-wrap:wrap;justify-content:center;
+    font-family:"Hack",monospace;font-weight:700;font-size:.6rem;color:#e4d8ff;letter-spacing:.02em;
+    text-shadow:0 0 2px rgba(8,4,16,1),0 0 4px rgba(8,4,16,1),0 1px 3px rgba(8,4,16,.95),0 2px 8px rgba(8,4,16,.8);
+    border-radius:12px;border:0;padding:10px 12px;background:transparent}
+  .combo-foot .sep{color:#9784c0}
+  .combo-foot .sg{color:var(--lcd);letter-spacing:1px}
+  .combo-foot .amt{color:var(--gold)}
+  .combo-foot .pct{color:var(--pink)}
+
+  .note{font-family:"Hack",monospace;font-size:.64rem;color:#d3c6ec;margin:14px auto 0;max-width:600px;text-align:center;line-height:1.6;text-shadow:0 0 2px rgba(8,4,16,1),0 0 4px rgba(8,4,16,1),0 1px 3px rgba(8,4,16,.95),0 2px 8px rgba(8,4,16,.8)}
+
+  @media(max-width:560px){
+    h1.pg{font-size:11px}
+    .be-pager{padding:13px 13px 14px;border-radius:14px 14px 20px 20px}
+    .lcd-body{flex-direction:column;gap:10px}
+    .lcd-readout{flex:none}
+    .lcd-graph{flex:none}
+    .lcd-chart svg{min-height:118px}
+    .printwrap{max-width:440px}
+    .combo-foot{max-width:440px}
+    .lcd-bal{font-size:clamp(1.4rem,8vw,2rem)}
+    .btn{font-size:6px;padding:6px 8px}
+    .rb{grid-template-columns:56px 14px 60px 14px auto;font-size:10.5px;padding-left:18px}
+  }
+  @media(prefers-reduced-motion:reduce){
+    .lcd-bal,.led,.lcd-msg,.lcd-head .sig,.lcd-chart .ch-lbl .rec i,#chCursor,.be-pager.buzz,.pl.on,.receipt-inner.feed{animation:none}
+    .pl.on::after{display:none}
+    .lcd-bar i{transition:none}
+  }
+</style></head>
+<body><div class="wrap">
+
+<span class="sec-kicker">// &#129534; bounty pager &middot; payouts received</span>
+<h2 class="sec-title">bounty earnings</h2>
+
+<!-- the PAGE-9 beeper itself, stretched WIDE / LANDSCAPE (no Switch, no joy-cons) -->
+<div class="be-pager" id="pager">
+  <div class="clip"></div>
+
+  <div class="pg-top">
+    <span class="led idle" id="led"></span>
+    <span class="brand">a1ohadance &middot; POS-9</span>
+    <span class="ptag">PAGER</span>
+  </div>
+
+  <div class="lcd">
+    <div class="lcd-scan"></div>
+    <div class="lcd-head">
+      <span class="lcd-msg" id="lcdmsg">&#129534; awaiting print&hellip;</span>
+      <span class="sig"><i></i><i></i><i></i><i></i></span>
+      <span class="msgno" id="msgno">MSG 0/4</span>
+    </div>
+
+    <div class="lcd-body">
+      <!-- LEFT: balance readout + goal bar -->
+      <div class="lcd-col lcd-readout">
+        <div class="lcd-ballbl">balance · usd</div>
+        <div class="lcd-bal" id="bal">$0</div>
+        <div class="lcd-myr">&asymp; <b id="myr">RM 0</b> MYR</div>
+        <div class="lcd-goal">
+          <div class="lcd-bar"><i id="goalBar"></i></div>
+          <div class="lcd-gtxt"><span id="goalNum">1,850/10,000 &middot; 18.5%</span><span>by 2027</span></div>
+        </div>
+      </div>
+
+      <!-- RIGHT: cumulative line chart (full landscape height) -->
+      <div class="lcd-col lcd-graph">
+        <div class="lcd-chart" id="chartWrap">
+          <div class="ch-lbl">&#128200; cumulative · usd<span class="rec"><i></i>REC</span></div>
+          <svg viewBox="0 0 260 116" aria-hidden="true" preserveAspectRatio="none">
+            <defs>
+              <pattern id="dith" width="3" height="3" patternUnits="userSpaceOnUse">
+                <rect width="3" height="3" fill="#306230"/>
+                <rect width="1" height="1" fill="#0f380f"/>
+              </pattern>
+            </defs>
+            <line class="grid" x1="30" y1="16" x2="252" y2="16"/>
+            <line class="grid" x1="30" y1="56" x2="252" y2="56"/>
+            <line class="baseline" x1="30" y1="96" x2="252" y2="96"/>
+            <line class="target" x1="30" y1="16" x2="252" y2="16"/>
+            <text class="tgl" x="250" y="13" text-anchor="end">&#9656; $10K &middot; 2027</text>
+            <text class="axl" x="2" y="19">$10K</text>
+            <text class="axl" x="2" y="59">$5K</text>
+            <text class="axl" x="10" y="99">$0</text>
+            <path id="chArea" fill="url(#dith)" d=""></path>
+            <polyline id="chLine" fill="none" stroke="#0f380f" stroke-width="2.8" points=""></polyline>
+            <rect id="chCursor" x="27.5" y="93.5" width="5" height="5" fill="#0f380f"></rect>
+          </svg>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="pg-ctl">
+    <div class="speaker" id="speaker"></div>
+    <div class="btns">
+      <span class="btn read">READ</span>
+      <span class="btn rnd">&#9650;</span>
+      <span class="btn rnd">&#9660;</span>
+      <span class="btn">MENU</span>
+    </div>
+  </div>
+</div>
+
+<!-- THERMAL POS receipt feed (centered, below the pager) -->
+<div class="printwrap">
+  <div class="printer">
+    <div class="pr-top">
+      <span class="led idle"></span>
+      <span class="brand">a1ohadance &middot; POS-9</span>
+      <span class="ptag">RECEIPT</span>
+    </div>
+    <div class="pr-slot"></div>
+  </div>
+  <div class="paper">
+    <div class="receipt-inner" id="receipt">
+      <div class="rc-brand pl hide" id="rcBrand">a1ohadance &middot; BOUNTY LEDGER &middot; POS-9</div>
+      <div class="rc-title pl hide" id="rcTitle">&#9733; BOUNTY RECEIPT &#9733;</div>
+      <div class="rc-sub pl hide" id="rcSub">official payout statement</div>
+      <div class="rc-div pl hide" id="rcDivTop"></div>
+      <div id="items"></div>
+      <div class="ldr pl hide" id="subRow"><span>SUBTOTAL</span><i></i><span><span id="subUsd" class="grn">$0</span> &middot; <span id="subMyr">RM 0</span></span></div>
+      <div class="rc-div dbl pl hide" id="rcDivBot"></div>
+      <div class="ldr big pl hide" id="totalRow"><span>TOTAL</span><i></i><span><span class="grn">$1,850</span> &middot; RM 8,325</span></div>
+      <div class="ldr pl hide" id="goalRow"><span>GOAL</span><i></i><span>$10,000 &middot; 18.5%</span></div>
+      <div class="rc-thanks pl hide" id="thanksRow">PAID IN FULL &middot; TERIMA KASIH</div>
+      <div class="barcode pl hide" id="barcodeRow"></div>
+      <div class="rc-bcnum pl hide" id="bcnumRow">9 771850 027001</div>
+    </div>
+  </div>
+</div>
+
+<div class="combo-foot">
+  <span>signal <span class="sg">&#9646;&#9646;&#9646;</span></span><span class="sep">·</span>
+  <span><span id="fRecv">0/4</span> received</span><span class="sep">·</span>
+  <span><span class="amt" id="fTot">$0</span> / <span class="amt">$10,000</span></span><span class="sep">·</span>
+  <span class="pct" id="fPct">0.0%</span><span class="sep">·</span>
+  <span>by 2027</span>
+</div>
+
+<p class="note">// targets masked per disclosure terms · platforms shown · 1 CHF&asymp;1.30 USD · 1 USD&asymp;4.50 MYR</p>
+
+</div>
+<script>
+  function nf(n){return Math.round(n).toLocaleString("en-US");}
+
+  // classified redaction bar — same censored bar for every row
+  function redactBar(){
+    return '<span class="redact"><span class="rlk">&#128274;</span>REDACTED</span>';
+  }
+  // monochrome platform logos (inherit accent via currentColor)
+  function platLogo(type){
+    if(type==="compass"){
+      return '<svg class="plogo" viewBox="0 0 16 16" aria-hidden="true">'+
+        '<circle cx="8" cy="8" r="6.6" fill="none" stroke="currentColor" stroke-width="1.1"/>'+
+        '<path d="M8 2.2 L9.6 8 L8 13.8 L6.4 8 Z" fill="currentColor"/>'+
+        '<path d="M2.2 8 L8 6.4 L13.8 8 L8 9.6 Z" fill="currentColor" opacity=".45"/>'+
+        '<circle cx="8" cy="8" r="1" fill="currentColor"/></svg>';
+    }
+    return '<svg class="plogo" viewBox="0 0 16 16" aria-hidden="true">'+
+      '<rect x="2.4" y="2.6"  width="11.2" height="3.1" rx="1" fill="none" stroke="currentColor" stroke-width="1.1"/>'+
+      '<rect x="2.4" y="6.45" width="11.2" height="3.1" rx="1" fill="none" stroke="currentColor" stroke-width="1.1"/>'+
+      '<rect x="2.4" y="10.3" width="11.2" height="3.1" rx="1" fill="none" stroke="currentColor" stroke-width="1.1"/>'+
+      '<circle cx="4.7" cy="4.15" r=".85" fill="currentColor"/>'+
+      '<circle cx="4.7" cy="8"    r=".85" fill="currentColor"/>'+
+      '<circle cx="4.7" cy="11.85" r=".85" fill="currentColor"/></svg>';
+  }
+
+  var PAY=[
+    {plat:"COMPASS SECURITY", type:"compass", native:"550 CHF", usd:715, myr:3218, acc:"#2e6f7e"},
+    {plat:"COMPASS SECURITY", type:"compass", native:"200 CHF", usd:260, myr:1170, acc:"#2e6f7e"},
+    {plat:"SELF-HOSTED",      type:"server",  native:"750 USD", usd:750, myr:3375, acc:"#4f5a73"},
+    {plat:"SELF-HOSTED",      type:"server",  native:"125 USD", usd:125, myr:563,  acc:"#4f5a73"}
+  ];
+  var CUM=[0,715,975,1725,1850];
+  var GOAL=10000, MYR=4.5, FINAL=1850;
+
+  // speaker grille dots
+  var spk=document.getElementById("speaker");
+  for(var s=0;s<18;s++){ spk.appendChild(document.createElement("b")); }
+
+  var pagerEl=document.getElementById("pager"), ledEl=document.getElementById("led"),
+      msgnoEl=document.getElementById("msgno"), lcdmsgEl=document.getElementById("lcdmsg"),
+      balEl=document.getElementById("bal"), myrEl=document.getElementById("myr"),
+      goalBar=document.getElementById("goalBar"), goalNum=document.getElementById("goalNum"),
+      fTot=document.getElementById("fTot"), fPct=document.getElementById("fPct"), fRecv=document.getElementById("fRecv");
+
+  // receipt refs
+  var rin=document.getElementById("receipt"), items=document.getElementById("items"),
+      subUsd=document.getElementById("subUsd"), subMyr=document.getElementById("subMyr"), subRow=document.getElementById("subRow"),
+      rcBrand=document.getElementById("rcBrand"), rcTitle=document.getElementById("rcTitle"), rcSub=document.getElementById("rcSub"),
+      rcDivTop=document.getElementById("rcDivTop"), rcDivBot=document.getElementById("rcDivBot"),
+      totalRow=document.getElementById("totalRow"), goalRow=document.getElementById("goalRow"),
+      thanksRow=document.getElementById("thanksRow"), barcodeRow=document.getElementById("barcodeRow"),
+      bcnumRow=document.getElementById("bcnumRow");
+
+  // ---- embedded chart geometry (viewBox 0 0 260 116, landscape) ----
+  var BASE=96, TOP=16, MAXV=10000, X0=30, XSTEP=(252-X0)/4;
+  function yAt(v){ return BASE-(v/MAXV)*(BASE-TOP); }
+  var PTS=CUM.map(function(v,i){ return {x:X0+i*XSTEP, y:yAt(v)}; });
+  var lineEl=document.getElementById("chLine"),
+      areaEl=document.getElementById("chArea"),
+      cursorEl=document.getElementById("chCursor");
+  var curN=1; // committed points (origin only)
+
+  function stepArr(arr){
+    var out=[{x:arr[0].x,y:arr[0].y}];
+    for(var i=1;i<arr.length;i++){
+      out.push({x:arr[i].x,y:arr[i-1].y});
+      out.push({x:arr[i].x,y:arr[i].y});
+    }
+    return out;
+  }
+  function redraw(extra){
+    var arr=PTS.slice(0,curN);
+    if(extra) arr=arr.concat([extra]);
+    var st=stepArr(arr);
+    lineEl.setAttribute("points", st.map(function(p){return p.x.toFixed(1)+","+p.y.toFixed(1);}).join(" "));
+    var d="M "+st[0].x.toFixed(1)+" "+BASE+" ";
+    st.forEach(function(p){ d+="L "+p.x.toFixed(1)+" "+p.y.toFixed(1)+" "; });
+    d+="L "+st[st.length-1].x.toFixed(1)+" "+BASE+" Z";
+    areaEl.setAttribute("d", d);
+    var last=st[st.length-1];
+    cursorEl.setAttribute("x",(last.x-2.5).toFixed(1));
+    cursorEl.setAttribute("y",(last.y-2.5).toFixed(1));
+  }
+
+  // ---- build receipt rows once (two lines per payout, all hidden) ----
+  var lineAEls=[], lineBEls=[];
+  PAY.forEach(function(p,i){
+    var a=document.createElement("div"); a.className="r pl hide"; a.style.setProperty("--acc",p.acc);
+    a.innerHTML='<span class="r-l"><span class="r-tag">PAID</span> '+redactBar()+' <span class="r-plat">'+platLogo(p.type)+p.plat+'</span></span>';
+    items.appendChild(a); lineAEls.push(a);
+    var b=document.createElement("div"); b.className="rb pl hide";
+    b.innerHTML='<span class="c-nat">'+p.native+'</span>'+
+                '<span class="ar">&rarr;</span>'+
+                '<span class="c-usd">&asymp; $'+p.usd+'</span>'+
+                '<span class="ar">&rarr;</span>'+
+                '<span class="c-myr">&asymp; RM '+nf(p.myr)+'</span>';
+    items.appendChild(b); lineBEls.push(b);
+  });
+
+  function setNum(v){
+    balEl.textContent="$"+nf(v);
+    myrEl.textContent="RM "+nf(v*MYR);
+    goalNum.innerHTML=nf(v)+"/10,000 &middot; "+(v/GOAL*100).toFixed(1)+"%";
+    fTot.textContent="$"+nf(v);
+    fPct.textContent=(v/GOAL*100).toFixed(1)+"%";
+  }
+
+  function pageMsg(p){ return '<span class="lk">&#128274;</span>REDACTED<span class="plus">+$'+p.usd+'</span>'; }
+
+  function buzz(p,i){
+    pagerEl.classList.remove("buzz"); void pagerEl.offsetWidth; pagerEl.classList.add("buzz");
+    ledEl.classList.remove("idle"); ledEl.classList.add("hot");
+    if(ledTimer) clearTimeout(ledTimer);
+    ledTimer=setTimeout(function(){ ledEl.classList.remove("hot"); ledEl.classList.add("idle"); }, 360);
+    lcdmsgEl.classList.remove("in"); void lcdmsgEl.offsetWidth;
+    lcdmsgEl.innerHTML=pageMsg(p); lcdmsgEl.classList.add("in");
+    msgnoEl.textContent="MSG "+(i+1)+"/4";
+  }
+
+  var REDUCED = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var timers=[], ledTimer=null;
+  function clearAll(){ timers.forEach(clearTimeout); timers=[]; if(ledTimer){clearTimeout(ledTimer);ledTimer=null;} }
+
+  // shared count-up: drives pager BALANCE + footer + embedded chart segment together
+  function animateStep(i){
+    var from=CUM[i], to=CUM[i+1], dur=560, t0=null, a=PTS[i], b=PTS[i+1];
+    function fr(ts){
+      if(!t0)t0=ts; var pr=Math.min(1,(ts-t0)/dur), e=1-Math.pow(1-pr,3);
+      setNum(from+(to-from)*e);
+      redraw({x:a.x+(b.x-a.x)*e, y:a.y+(b.y-a.y)*e});
+      if(pr<1) requestAnimationFrame(fr);
+      else { setNum(to); curN=i+2; redraw(); }
+    }
+    requestAnimationFrame(fr);
+  }
+
+  // pager buzz + embedded chart step + footer, all in sync with the printed row
+  function fireMetrics(i){
+    buzz(PAY[i],i);
+    fRecv.textContent=(i+1)+"/4";
+    goalBar.style.width=Math.min(100,CUM[i+1]/GOAL*100)+"%";
+    animateStep(i);
+  }
+
+  // ---- receipt print mechanics ----
+  function printLine(el){ el.classList.remove("hide"); el.classList.remove("on"); void el.offsetWidth; el.classList.add("on"); }
+  function feed(){ rin.classList.remove("feed"); void rin.offsetWidth; rin.classList.add("feed"); }
+
+  function printRow(i){
+    // line A: PAID <redaction bar> <logo + platform>  (in sync with pager buzz + chart point)
+    printLine(lineAEls[i]);
+    feed();
+    fireMetrics(i);
+    // line B: native -> USD -> MYR, then running subtotal (USD + MYR)
+    timers.push(setTimeout(function(){
+      printLine(lineBEls[i]); feed();
+      subUsd.textContent="$"+nf(CUM[i+1]);
+      subMyr.textContent="RM "+nf(CUM[i+1]*MYR);
+      printLine(subRow);
+    }, 260));
+  }
+
+  function resetAll(){
+    var pls=document.querySelectorAll(".pl");
+    pls.forEach(function(e){ e.classList.add("hide"); e.classList.remove("on"); });
+    rin.classList.remove("feed");
+    subUsd.textContent="$0"; subMyr.textContent="RM 0";
+    fRecv.textContent="0/4";
+    setNum(0); goalBar.style.width="0";
+    lcdmsgEl.innerHTML="&#129534; awaiting print&hellip;"; msgnoEl.textContent="MSG 0/4";
+    curN=1; redraw();
+  }
+
+  if(REDUCED){
+    document.querySelectorAll(".pl").forEach(function(e){ e.classList.remove("hide"); });
+    subUsd.textContent="$"+nf(FINAL); subMyr.textContent="RM "+nf(FINAL*MYR);
+    fRecv.textContent="4/4";
+    setNum(FINAL); goalBar.style.width=(FINAL/GOAL*100)+"%";
+    curN=PTS.length; redraw();
+    lcdmsgEl.innerHTML=pageMsg(PAY[3]); msgnoEl.textContent="MSG 4/4"; ledEl.classList.remove("idle");
+  } else {
+    var START=700, STEP=850, FB=3950, played=false;
+    resetAll();
+    function play(){
+      if(played) return; played=true;
+      clearAll();
+      // print the receipt letterhead + header
+      timers.push(setTimeout(function(){ printLine(rcBrand); feed(); }, 120));
+      timers.push(setTimeout(function(){ printLine(rcTitle); feed(); }, 320));
+      timers.push(setTimeout(function(){ printLine(rcSub); }, 540));
+      timers.push(setTimeout(function(){ printLine(rcDivTop); }, 720));
+      // print each payout (two lines) one by one, in sync with chart + pager
+      PAY.forEach(function(p,i){
+        timers.push(setTimeout(function(){ printRow(i); }, START+i*STEP));
+      });
+      // close out the receipt, then HOLD the complete receipt (no reset/loop)
+      timers.push(setTimeout(function(){ printLine(rcDivBot); feed(); }, FB));
+      timers.push(setTimeout(function(){ printLine(totalRow); feed(); }, FB+260));
+      timers.push(setTimeout(function(){ printLine(goalRow); }, FB+520));
+      timers.push(setTimeout(function(){ printLine(thanksRow); feed(); }, FB+820));
+      timers.push(setTimeout(function(){ printLine(barcodeRow); }, FB+1080));
+      timers.push(setTimeout(function(){ printLine(bcnumRow); }, FB+1280));
+    }
+    // play the intro when the parent signals this section is on-screen (fallback plays anyway)
+    var started=false;
+    function go(){ if(started) return; started=true; play(); }
+    window.addEventListener("message", function(e){ if(e && e.data && e.data.playBounty) go(); });
+    setTimeout(go, 14000);
+  }
+</script>
+<script>(function(){function h(){try{var w=document.querySelector('.wrap');parent.postMessage({beFrameH:Math.ceil(w.getBoundingClientRect().height)+12},'*');}catch(e){}}window.addEventListener('load',function(){h();[200,700,1600,3200,6500,9000].forEach(function(t){setTimeout(h,t);});});window.addEventListener('resize',h);})();</script>
+</body></html>
