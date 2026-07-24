@@ -1,0 +1,25 @@
+{{ define "title" }}404 // signal lost{{ end }}
+{{ define "description" }}404 — the requested file could not be reconstructed.{{ end }}
+{{ define "main" }}
+<section class="hero wrap err-404" aria-labelledby="err-title" style="text-align:center">
+  <p class="eyebrow">// ERROR 0x194 · <b>FILE NOT FOUND</b></p>
+
+  <h1 id="err-title" class="glitch-title" data-text="404"><span>404</span></h1>
+
+  <div class="scan-tear" aria-hidden="true">
+    <div class="slice" data-text="404">404</div>
+  </div>
+
+  <p class="foot-glitch" data-text="// SIGNAL LOST" style="font-size:1.05rem;margin:.3rem 0 0">// S1GN&#65533;L L&#65533;ST_</p>
+
+  <p style="color:var(--muted);max-width:44ch;margin:1.1rem auto 0;line-height:1.6">
+    The file you requested was corrupted, moved, or never existed in this timeline.
+    Re-route below.
+  </p>
+
+  <p style="margin-top:1.7rem;display:flex;gap:.7rem;justify-content:center;flex-wrap:wrap">
+    <a class="btn" href="{{ "/" | relLangURL }}" style="margin-top:0">&#8617; return home</a>
+    <a class="btn btn-ghost" href="{{ "/posts/" | relLangURL }}" style="margin-top:0">browse write-ups</a>
+  </p>
+</section>
+{{ end }}

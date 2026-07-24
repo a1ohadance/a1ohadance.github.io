@@ -1,0 +1,311 @@
+{{ define "title" }}a1ohadance // FITRI SULTAN · purple teamer{{ end }}
+{{ define "description" }}Fitri Sultan (a1ohadance), Threat Hunter & Researcher @ MyCERT. Purple team · web2 · cloud · IoT · DFIR · threat intel. Write-ups, CVEs, and recognition.{{ end }}
+{{ define "bodyclass" }} class="is-home"{{ end }}
+{{ define "main" }}
+  {{ $posts := where .Site.RegularPages "Type" "posts" }}
+
+    <!-- live CC0 pixel-art city wallpaper (fixed background, JS-rendered) -->
+    <canvas id="homewall" aria-hidden="true"></canvas>
+    <div id="homeveil" aria-hidden="true"></div>
+
+    <!-- ===================== HERO ===================== -->
+    <section class="hero wrap" aria-labelledby="hero-name">
+      <div class="hero-lead">
+      <p class="eyebrow">// INCOMING TRANSMISSION · <b>DECODING</b> · <span class="me">a1ohadance</span></p>
+
+      <h1 id="hero-name" class="glitch-title" data-text="Fitri&#10;Sultan">
+        <span>Fitri</span><span>Sultan</span>
+      </h1>
+
+      <!-- scan-tear overlay layer (JS toggles .active) -->
+      <div class="scan-tear" aria-hidden="true">
+        <div class="slice" data-text="Fitri&#10;Sultan">Fitri Sultan</div>
+      </div>
+
+      <p class="tagline">
+        <span class="tl-txt"><span class="role" id="role-rotate">Threat Hunter</span><span class="caret" aria-hidden="true"></span> <span class="at-sym">@</span> <span class="at-org">MyCERT</span></span><img class="myflag" src="{{ "assets/flag-my.svg" | relURL }}" alt="Malaysia" width="30" height="30">
+      </p>
+
+      <p class="cap-line">
+        <span class="cap c1">purple team</span> <span class="sep">·</span>
+        <span class="cap c2">web2</span> <span class="sep">·</span>
+        <span class="cap c3">cloud</span> <span class="sep">·</span>
+        <span class="cap c4">IoT</span> <span class="sep">·</span>
+        <span class="cap c5">bug hunter</span>
+      </p>
+
+      <div class="stat-row">
+        <a class="stat" href="{{ "badges/" | relLangURL }}#hof-title" style="--acc:#ffb02e" aria-label="11 times Hall of Fame">
+          <svg class="pico" viewBox="0 0 7 5" width="15" height="15" shape-rendering="crispEdges" aria-hidden="true"><g fill="currentColor"><rect x="1" y="0" width="5" height="1"/><rect x="0" y="1" width="1" height="1"/><rect x="1" y="1" width="5" height="1"/><rect x="6" y="1" width="1" height="1"/><rect x="2" y="2" width="3" height="1"/><rect x="3" y="3" width="1" height="1"/><rect x="2" y="4" width="3" height="1"/></g></svg>
+          <b>11×</b> Hall of Fame
+        </a>
+        <a class="stat" href="{{ "badges/" | relLangURL }}#cve-title" style="--acc:#ff003c" aria-label="2 published CVEs">
+          <svg class="pico" viewBox="0 0 7 6" width="15" height="15" shape-rendering="crispEdges" aria-hidden="true"><g fill="currentColor"><rect x="1" y="0" width="5" height="1"/><rect x="0" y="1" width="7" height="1"/><rect x="0" y="2" width="2" height="1"/><rect x="3" y="2" width="1" height="1"/><rect x="5" y="2" width="2" height="1"/><rect x="0" y="3" width="7" height="1"/><rect x="1" y="4" width="5" height="1"/><rect x="1" y="5" width="1" height="1"/><rect x="3" y="5" width="1" height="1"/><rect x="5" y="5" width="1" height="1"/></g></svg>
+          <b>2</b> CVEs
+        </a>
+        <a class="stat" href="{{ "badges/" | relLangURL }}#cert-title" style="--acc:#36e27a" aria-label="5 certifications">
+          <svg class="pico" viewBox="0 0 7 5" width="15" height="15" shape-rendering="crispEdges" aria-hidden="true"><g fill="currentColor"><rect x="1" y="3" width="1" height="1"/><rect x="2" y="4" width="1" height="1"/><rect x="3" y="3" width="1" height="1"/><rect x="4" y="2" width="1" height="1"/><rect x="5" y="1" width="1" height="1"/><rect x="6" y="0" width="1" height="1"/></g></svg>
+          <b>5</b> Certs
+        </a>
+      </div>
+
+      </div><!-- /.hero-lead : clean first screen -->
+
+      {{ if false }}{{/* KIV: pong + connection-trace hidden for now. Restore by changing this to {{ if true }} (or removing the guard + its {{ end }} below). */}}
+      <div class="arcade" aria-label="idle process: pong (auto-playing)">
+        <div class="arcade-bar"><span class="arcade-dot" aria-hidden="true"></span> // IDLE PROCESS · <b>pong.exe</b> <span class="arcade-run">AUTORUN</span></div>
+        <canvas class="arcade-screen" width="540" height="150" aria-hidden="true"></canvas>
+      </div>
+
+      <!-- live connection-trace recon (client-side; nothing stored) -->
+      <div class="recon" id="recon" aria-label="Live connection trace">
+        <div class="recon-bar"><span class="recon-dot" aria-hidden="true"></span> // CONNECTION INTERCEPTED · <b>TRACE</b><span class="recon-state" id="recon-state">SCANNING…</span></div>
+        <div class="recon-body">
+          <p class="recon-line"><span class="k">remote_host</span> <span class="v" id="rc-ip">████ ████ ████</span></p>
+          <p class="recon-line"><span class="k">geo_locate</span> <span class="v" id="rc-geo">████████████</span></p>
+          <p class="recon-line"><span class="k">net_provider</span> <span class="v" id="rc-isp">██████████</span></p>
+          <p class="recon-line"><span class="k">device</span> <span class="v" id="rc-dev">████████</span></p>
+          <p class="recon-line"><span class="k">viewport</span> <span class="v" id="rc-scr">██████</span></p>
+          <p class="recon-line"><span class="k">timezone</span> <span class="v" id="rc-tz">████████</span></p>
+          <p class="recon-note" id="rc-note">// you are not anonymous here. traced live in-browser — nothing is logged. <span class="rc-wink">probably.</span></p>
+        </div>
+      </div>
+      {{ end }}{{/* /KIV pong + recon */}}
+    </section>
+
+    <!-- ===================== GLOBAL RECOGNITION (ops map) ===================== -->
+    {{ $bp := "badges/" | relLangURL }}
+    <section class="opsmap-sec" aria-labelledby="ops-title">
+      <div class="opsmap-head"><span class="dot" aria-hidden="true"></span> // GLOBAL RECOGNITION · <b>8 NODES</b> <span class="ops-meta" id="ops-title">ATTACK &#8594; RECOGNIZED</span></div>
+      <div class="nsw"><div class="nsw-joy l" aria-hidden="true"><div class="nsw-stick"></div><div class="nsw-dpad"><span class="v"></span><span class="h"></span></div></div><div class="nsw-mid">
+      <div class="globe-stage" id="globe-stage">
+      <div class="tgt" id="ops-tgt" aria-hidden="true">// STANDBY</div>
+      <svg class="opsmap" viewBox="0 0 360 180" preserveAspectRatio="xMidYMid meet" role="img" aria-label="World map: Hall of Fame recognitions across the US and Europe, traced from home base in Malaysia">
+        <defs>
+          <filter id="opglow" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="1.3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+        </defs>
+        <image href="{{ "assets/worldmap.webp" | relURL }}" x="0" y="0" width="360" height="180" opacity="0.92"/>
+        <g class="ops-lines" filter="url(#opglow)">
+          <line x1="282" y1="87" x2="103" y2="51"/><line x1="282" y1="87" x2="108" y2="48"/><line x1="282" y1="87" x2="99" y2="55"/><line x1="282" y1="87" x2="101" y2="53"/><line x1="282" y1="87" x2="181" y2="42"/><line x1="282" y1="87" x2="186" y2="45"/><line x1="282" y1="87" x2="189" y2="39"/><line x1="282" y1="87" x2="193" y2="47"/><line x1="282" y1="87" x2="205" y2="30"/><line x1="282" y1="87" x2="178.5" y2="37"/><line x1="282" y1="87" x2="93" y2="48"/>
+        </g>
+        <circle class="ops-radar" cx="282" cy="87" r="2.5"/>
+        <circle class="ops-home" cx="282" cy="87" r="2.4" filter="url(#opglow)"><title>a1ohadance — base: Kuala Lumpur, MY</title></circle>
+        <g class="ops-pins" filter="url(#opglow)">
+          <a href="{{ $bp }}#hof-title"><title>NASA — Hall of Fame</title><circle cx="103" cy="51" r="1.7"/></a>
+          <a href="{{ $bp }}#hof-title"><title>UNICEF — Hall of Fame</title><circle cx="108" cy="48" r="1.7"/></a>
+          <a href="{{ $bp }}#hof-title"><title>U.S. Dept. of Education — Hall of Fame</title><circle cx="99" cy="55" r="1.7"/></a>
+          <a href="{{ $bp }}#hof-title"><title>U.S. Dept. of Energy — Hall of Fame</title><circle cx="101" cy="53" r="1.7"/></a>
+          <a href="{{ $bp }}#hof-title"><title>UNESCO — Hall of Fame</title><circle cx="181" cy="42" r="1.7"/></a>
+          <a href="{{ $bp }}#hof-title"><title>WHO — Hall of Fame</title><circle cx="186" cy="45" r="1.7"/></a>
+          <a href="{{ $bp }}#hof-title"><title>Bayer — Hall of Fame</title><circle cx="189" cy="39" r="1.7"/></a>
+          <a href="{{ $bp }}#hof-title"><title>Ferrari — Hall of Fame</title><circle cx="193" cy="47" r="1.7"/></a>
+          <a href="{{ $bp }}#hof-title"><title>Nokia — Hall of Fame</title><circle cx="205" cy="30" r="1.7"/></a>
+          <a href="{{ $bp }}#hof-title"><title>BP — Hall of Fame</title><circle cx="178.5" cy="37" r="1.7"/></a>
+          <a href="{{ $bp }}#hof-title"><title>Motorola Solutions — Hall of Fame</title><circle cx="93" cy="48" r="1.7"/></a>
+        </g>
+      </svg>
+      <div class="globe-holder" id="globe" aria-hidden="true"></div>
+      <span class="ops-brand" aria-hidden="true">a1ohadance &#183; OPS-9</span>
+      </div>
+      </div><div class="nsw-joy r" aria-hidden="true"><div class="nsw-stick"></div><div class="nsw-abxy"><i class="t"></i><i class="r"></i><i class="b"></i><i class="l"></i></div></div></div>
+      <div class="rec-hand" aria-hidden="true"><div class="rec-cap" id="rec-cap"></div><div class="rec-fan" id="rec-fan"></div></div>
+      <div class="stoneterm"><div class="ops-term" aria-hidden="true">
+        <div class="term-bar">
+          <span class="tb-dots"><span class="d r"></span><span class="d y"></span><span class="d g"></span></span>
+          <span class="tb-title"><svg class="tb-ic" viewBox="0 0 16 16" aria-hidden="true"><rect x="1" y="2" width="14" height="12" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.1"/><path d="M3.5 6l2 2-2 2M7 10h4" fill="none" stroke="currentColor" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round"/></svg> root@a1ohadance: ~/ops/attack</span>
+          <span class="tb-win">&#8211;&nbsp;&#9723;&nbsp;&#10005;</span>
+        </div>
+        <div class="term-menu"><span>File</span><span>Edit</span><span>View</span><span>Terminal</span><span>Tabs</span><span>Help</span></div>
+        <div class="term-body" id="ops-term"></div>
+        <canvas id="term-rain" aria-hidden="true"></canvas>
+      </div></div>
+      <p class="ops-legend"><a href="{{ $bp }}#hof-title">NASA · WHO · UNICEF · UNESCO · Ferrari · Bayer · BP · Motorola Solutions · U.S. Dept. of Education · U.S. Dept. of Energy · Nokia <span class="ops-verify">▸ verify</span></a></p>
+    </section>
+
+
+    <!-- ===================== BOUNTY EARNINGS (cc-rcpt-pos5) ===================== -->
+        <!-- ===================== BOUNTY EARNINGS (isolated iframe) ===================== -->
+    <section class="be-embed" id="bounty" aria-label="Bounty earnings - payouts received">
+      <iframe class="be-frame" title="Bounty earnings - payouts received" src="{{ "embed/bounty.html" | relURL }}?v=12" scrolling="no" loading="lazy"></iframe>
+    </section>
+    <script>
+      window.addEventListener("message",function(e){if(e&&e.data&&e.data.beFrameH){var f=document.querySelector(".be-frame");if(f)f.style.height=e.data.beFrameH+"px";}});
+      (function(){var f=document.querySelector(".be-frame");if(!f||!("IntersectionObserver" in window))return;var sent=false;
+        function ping(){if(f.contentWindow){try{f.contentWindow.postMessage({playBounty:true},"*");}catch(e){}}}
+        var io=new IntersectionObserver(function(es){es.forEach(function(en){if(en.isIntersecting){sent=true;ping();io.unobserve(en.target);}});},{threshold:0,rootMargin:"0px 0px -8% 0px"});
+        io.observe(f); f.addEventListener("load",function(){if(sent)ping();});
+      })();
+    </script>
+
+
+    <!-- ===================== RECOVERED FILES / POSTS ===================== -->
+    <section class="section" id="posts" aria-labelledby="posts-title">
+      <div class="wrap">
+        <div class="sec-head">
+          <span class="sec-kicker">// RECOVERED FILES</span>
+          <h2 class="sec-title" id="posts-title">write-ups</h2>
+          <span class="sec-meta">{{ len $posts }} FILES RECONSTRUCTED</span>
+        </div>
+
+        {{ if gt (len $posts) 0 }}
+        {{ $f := index $posts 0 }}
+        <!-- featured: latest drop -->
+        <article class="feat{{ if $f.Params.cover }} has-cover{{ end }}">
+          <a class="card-link-cover" href="{{ $f.RelPermalink }}" aria-label="Latest write-up: {{ $f.Title }}"></a>
+          {{ with $f.Params.cover }}<span class="feat-cover"><img src="{{ . | relURL }}" alt="" loading="lazy" decoding="async"></span>{{ end }}
+          <div class="feat-body">
+            <span class="feat-flag">▸ LATEST DROP · <b>{{ $f.Date.Format "2006-01-02" }}</b></span>
+            {{ with $f.Params.kicker }}<p class="card-series">{{ . }}</p>{{ end }}
+            <h3 class="feat-title">{{ $f.Title }}</h3>
+            <p class="feat-excerpt">{{ $f.Summary }}</p>
+            <span class="recover">recover ↗</span>
+          </div>
+        </article>
+        {{ end }}
+
+        <!-- search + visitor counter -->
+        <div class="widget-bar">
+          <label class="search" for="post-search">
+            <span class="prompt" aria-hidden="true">$ grep</span>
+            <input type="search" id="post-search" data-target="home-posts"
+                   placeholder="filter recovered files…"
+                   aria-label="Filter write-ups by keyword">
+          </label>
+          <span class="counter-chip" aria-label="Visitor counter">
+            <span class="label">VISITORS</span>
+            <span class="count" id="visitor-count">000000</span>
+          </span>
+        </div>
+
+        <div class="posts" id="home-posts">
+          {{ range $i, $p := (after 1 $posts) }}
+          <article class="card{{ if $p.Params.cover }} has-cover{{ end }}">
+            <a class="card-link-cover" href="{{ $p.RelPermalink }}" aria-label="Recover: {{ $p.Title }}"></a>
+            {{ with $p.Params.cover }}<img class="card-cover" src="{{ . | relURL }}" alt="" loading="lazy" decoding="async">{{ end }}
+            <div class="card-meta">
+              <span class="file">FILE_{{ printf "%02d" (add $i 1) }}.bin</span>
+              <time datetime="{{ $p.Date.Format "2006-01-02" }}">{{ $p.Date.Format "2006-01-02" }}</time>
+            </div>
+            <p class="card-series">{{ $p.Params.kicker }}</p>
+            <h3 class="card-title">{{ $p.Title }}</h3>
+            <p class="card-excerpt">{{ $p.Summary }}</p>
+            <div class="tags">
+              {{ range $p.Params.tags }}<span class="tag">{{ . }}</span>
+              {{ end }}
+            </div>
+            <a class="recover" href="{{ $p.RelPermalink }}">recover ↗</a>
+          </article>
+          {{ end }}
+        </div>
+        <p class="search-empty" id="search-empty">// <b>NO MATCH</b> · no recovered files matched that signal.</p>
+      </div>
+    </section>
+
+    <!-- ===================== SIDE WIDGETS ===================== -->
+    <section class="section" id="picks" aria-labelledby="picks-title">
+      <div class="wrap">
+        <div class="sec-head">
+          <span class="sec-kicker">// SIDEBAND</span>
+          <h2 class="sec-title" id="picks-title">channels</h2>
+          <span class="sec-meta">HOT PICKS · RANDOM READS · TAGS</span>
+        </div>
+
+        <div class="widgets">
+
+          <!-- HOT PICKS (recent posts) -->
+          <div class="widget" style="--wac:#00e5ff;--wg:rgba(0,229,255,.13)">
+            <p class="widget-head"><span class="glyph" aria-hidden="true">▚</span> HOT PICKS</p>
+            <ul class="minilist">
+              {{ range first 2 $posts }}
+              <li>
+                <a href="{{ .RelPermalink }}">{{ .Title }}</a>
+                <span class="mini-meta"><span class="file">FILE.bin</span> · {{ .Date.Format "2006-01-02" }}</span>
+              </li>
+              {{ end }}
+            </ul>
+          </div>
+
+          <!-- RANDOM READS -->
+          <div class="widget" style="--wac:#ff35e0;--wg:rgba(255,53,224,.13)">
+            <p class="widget-head"><span class="glyph" aria-hidden="true">▚</span> RANDOM READS</p>
+            <ul class="minilist">
+              {{ range (shuffle $posts) | first 2 }}
+              <li>
+                <a href="{{ .RelPermalink }}">{{ .Title }}</a>
+                <span class="mini-meta"><span class="file">FILE.bin</span> · {{ .Params.kicker }}</span>
+              </li>
+              {{ end }}
+            </ul>
+          </div>
+
+          <!-- TAGS with counts -->
+          <div class="widget" style="--wac:#36e27a;--wg:rgba(54,226,122,.13)">
+            <p class="widget-head"><span class="glyph" aria-hidden="true">▚</span> TAGS</p>
+            <div class="tagcloud">
+              {{ range $name, $taxonomy := .Site.Taxonomies.tags }}
+              <a href="{{ "tags/" | relLangURL }}{{ $name | urlize }}/">{{ $name }} <span class="n">{{ len $taxonomy }}</span></a>
+              {{ end }}
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== EXPLORE MORE / CATEGORIES ===================== -->
+    <section class="section" id="explore" aria-labelledby="explore-title">
+      <div class="wrap">
+        <div class="sec-head">
+          <span class="sec-kicker">// EXPLORE MORE</span>
+          <h2 class="sec-title" id="explore-title">categories</h2>
+          <span class="sec-meta">6 CHANNELS</span>
+        </div>
+
+        {{ $glyphs := dict
+            "digital-forensics" `<svg viewBox="0 0 12 12" width="24" height="24" shape-rendering="crispEdges" aria-hidden="true"><g fill="currentColor"><rect x="3" y="1" width="4" height="1"/><rect x="2" y="2" width="1" height="1"/><rect x="7" y="2" width="1" height="1"/><rect x="1" y="3" width="1" height="3"/><rect x="8" y="3" width="1" height="3"/><rect x="2" y="6" width="1" height="1"/><rect x="7" y="6" width="1" height="1"/><rect x="3" y="7" width="4" height="1"/><rect x="8" y="8" width="2" height="1"/><rect x="9" y="9" width="2" height="1"/><rect x="10" y="10" width="2" height="1"/></g></svg>`
+            "threat-intel" `<svg viewBox="0 0 12 12" width="24" height="24" shape-rendering="crispEdges" aria-hidden="true"><g fill="currentColor"><rect x="4" y="3" width="4" height="1"/><rect x="2" y="4" width="2" height="1"/><rect x="8" y="4" width="2" height="1"/><rect x="1" y="5" width="1" height="2"/><rect x="10" y="5" width="1" height="2"/><rect x="5" y="5" width="2" height="2"/><rect x="2" y="7" width="2" height="1"/><rect x="8" y="7" width="2" height="1"/><rect x="4" y="8" width="4" height="1"/></g></svg>`
+            "threat-hunting" `<svg viewBox="0 0 12 12" width="24" height="24" shape-rendering="crispEdges" aria-hidden="true"><g fill="currentColor"><rect x="5" y="1" width="2" height="2"/><rect x="5" y="9" width="2" height="2"/><rect x="1" y="5" width="2" height="2"/><rect x="9" y="5" width="2" height="2"/><rect x="5" y="5" width="2" height="2"/><rect x="3" y="3" width="1" height="1"/><rect x="8" y="3" width="1" height="1"/><rect x="3" y="8" width="1" height="1"/><rect x="8" y="8" width="1" height="1"/></g></svg>`
+            "technology" `<svg viewBox="0 0 12 12" width="24" height="24" shape-rendering="crispEdges" aria-hidden="true"><g fill="currentColor"><rect x="3" y="3" width="6" height="1"/><rect x="3" y="8" width="6" height="1"/><rect x="3" y="3" width="1" height="6"/><rect x="8" y="3" width="1" height="6"/><rect x="5" y="5" width="2" height="2"/><rect x="4" y="1" width="1" height="2"/><rect x="7" y="1" width="1" height="2"/><rect x="4" y="9" width="1" height="2"/><rect x="7" y="9" width="1" height="2"/><rect x="1" y="4" width="2" height="1"/><rect x="1" y="7" width="2" height="1"/><rect x="9" y="4" width="2" height="1"/><rect x="9" y="7" width="2" height="1"/></g></svg>`
+            "malware" `<svg viewBox="0 0 12 12" width="24" height="24" shape-rendering="crispEdges" aria-hidden="true"><g fill="currentColor"><rect x="4" y="1" width="1" height="2"/><rect x="7" y="1" width="1" height="2"/><rect x="5" y="3" width="2" height="1"/><rect x="4" y="4" width="4" height="1"/><rect x="3" y="5" width="6" height="1"/><rect x="3" y="6" width="6" height="1"/><rect x="4" y="7" width="4" height="1"/><rect x="5" y="8" width="2" height="1"/><rect x="1" y="5" width="2" height="1"/><rect x="9" y="5" width="2" height="1"/><rect x="1" y="7" width="2" height="1"/><rect x="9" y="7" width="2" height="1"/></g></svg>`
+            "incident-response" `<svg viewBox="0 0 12 12" width="24" height="24" shape-rendering="crispEdges" aria-hidden="true"><g fill="currentColor"><rect x="2" y="1" width="1" height="10"/><rect x="3" y="2" width="7" height="1"/><rect x="3" y="3" width="6" height="1"/><rect x="3" y="4" width="7" height="1"/><rect x="3" y="5" width="6" height="1"/></g></svg>` }}
+        {{ $cats := slice
+            (dict "name" "Digital Forensics" "slug" "digital-forensics" "meta" "// /cat/forensics" "acc" "#00e5ff")
+            (dict "name" "Threat Intel" "slug" "threat-intel" "meta" "// /cat/threat-intel" "acc" "#a855f7")
+            (dict "name" "Threat Hunting" "slug" "threat-hunting" "meta" "// /cat/hunting" "acc" "#36e27a")
+            (dict "name" "Technology" "slug" "technology" "meta" "// /cat/technology" "acc" "#ffb02e")
+            (dict "name" "Malware" "slug" "malware" "meta" "// /cat/malware" "acc" "#ff003c")
+            (dict "name" "Incident Response" "slug" "incident-response" "meta" "// /cat/ir" "acc" "#ff35e0") }}
+        <div class="cat-grid">
+          {{ range $cats }}
+          <a class="cat-card" href="{{ "tags/" | relLangURL }}#cat-{{ .slug }}" style="--acc:{{ .acc }}">
+            <span class="cat-glyph" aria-hidden="true">{{ index $glyphs .slug | safeHTML }}</span>
+            <span class="cat-name">{{ .name }}</span>
+            <span class="cat-meta">{{ .meta }}</span>
+          </a>
+          {{ end }}
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== DECODED / WHOAMI TEASER ===================== -->
+    <section class="section" id="whoami" aria-labelledby="whoami-title">
+      <div class="wrap">
+        <div class="sec-head">
+          <span class="sec-kicker">// DECODED</span>
+          <h2 class="sec-title" id="whoami-title">whoami</h2>
+          <span class="sec-meta">INTEGRITY: OK</span>
+        </div>
+
+        <div class="decoded">
+          <p class="term-line">$ cat /etc/identity &nbsp;<span class="ok">[ OK ]</span> &nbsp;decryption complete</p>
+          <p>
+            <b>Fitri Sultan</b> / <span class="me">a1ohadance</span> · I write about malware, info-stealers, and the infrastructure behind credential theft. Cybersecurity notes, teardowns, and field findings.
+          </p>
+          <div class="links">
+            <a href="{{ "whoami/" | relLangURL }}">whoami / full profile</a>
+            <a href="{{ "posts/" | relLangURL }}">all write-ups</a>
+          </div>
+        </div>
+      </div>
+    </section>
+{{ end }}

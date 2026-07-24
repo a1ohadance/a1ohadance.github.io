@@ -1,0 +1,3 @@
+{{- $name := .Get 0 -}}
+{{- $color := .Get 1 | default "#00e5ff" -}}
+<span class="pglitch" style="--acc:{{ $color }}" aria-hidden="true">{{ partial "pico-svg.html" $name }}</span>
