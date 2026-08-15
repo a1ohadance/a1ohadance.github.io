@@ -1,0 +1,209 @@
+{{ define "title" }}{{ if eq .Type "posts" }}a1ohadance // write-ups · recovered files{{ else if eq .Kind "taxonomy" }}a1ohadance // {{ .Title }} · tagged{{ else if eq .Kind "term" }}a1ohadance // {{ .Title }}{{ else }}a1ohadance // {{ .Title }}{{ end }}{{ end }}
+{{ define "main" }}
+{{ if or (eq .Kind "term") (eq .Kind "taxonomy") }}
+{{/* ============================ TAXONOMY: term page (single tag/category) ============================ */}}
+  {{ if eq .Kind "term" }}
+    <header class="page-head wrap">
+      <p class="page-path">// <b>/var/index/{{ .Data.Plural }}/{{ .Title | urlize }}</b> · INDEXING SIGNAL</p>
+      <h1 class="page-title" data-text="{{ .Title | upper }}">{{ .Title | upper }}</h1>
+      <p class="page-sub">Every recovered file indexed under <b>{{ .Title }}</b>. Keep exploring, keep questioning. <span class="pglitch" style="--acc:#00e5ff">{{ partial "pico-svg.html" "eye" }}</span></p>
+    </header>
+
+    <section class="section wrap no-top" aria-labelledby="tax-title">
+      <div class="sec-head">
+        <span class="sec-kicker">// BY {{ .Data.Singular | upper }}</span>
+        <h2 class="sec-title" id="tax-title">{{ .Title }}</h2>
+        <span class="sec-meta">{{ len .Pages }} FILE{{ if ne (len .Pages) 1 }}S{{ end }}</span>
+      </div>
+
+      <div class="tax-block">
+        <p class="tax-label" style="--acc:#00e5ff"><span class="tax-ic">{{ partial "pixicon.html" (.Title | urlize) }}</span>{{ .Title }} <span class="n">({{ len .Pages }})</span></p>
+        <div class="posts">
+          {{ range $i, $p := .Pages }}
+          <article class="card">
+            <a class="card-link-cover" href="{{ $p.RelPermalink }}" aria-label="Recover: {{ $p.Title }}"></a>
+            <div class="card-meta">
+              <span class="file">FILE_{{ printf "%02d" (add $i 1) }}.bin</span>
+              <time datetime="{{ $p.Date.Format "2006-01-02" }}">{{ $p.Date.Format "2006-01-02" }}</time>
+            </div>
+            <p class="card-series">{{ $p.Params.kicker }}</p>
+            <h3 class="card-title">{{ $p.Title }}</h3>
+            <a class="recover" href="{{ $p.RelPermalink }}">recover ↗</a>
+          </article>
+          {{ end }}
+        </div>
+      </div>
+
+      <a class="back-link" href="{{ "tags/" | relLangURL }}">← back to tags &amp; categories</a>
+    </section>
+
+  {{ else }}
+{{/* ============================ TAXONOMY: list of all terms ============================ */}}
+    {{ $isTags := eq .Data.Plural "tags" }}
+    {{ $tagAcc := dict "credential-theft" "#ffe14d" "info-stealer" "#00e5ff" "malware" "#ff003c" "trojan" "#ff35e0" }}
+    {{ $catAcc := dict "digital-forensics" "#00e5ff" "threat-intel" "#a855f7" "threat-hunting" "#36e27a" "technology" "#ffb02e" "malware" "#ff003c" "incident-response" "#ff35e0" }}
+    <header class="page-head wrap">
+      <p class="page-path">// <b>/var/index/{{ .Data.Plural }}</b> · INDEXING SIGNAL</p>
+      <h1 class="page-title" data-text="{{ if $isTags }}TAGS&#10;&amp; CATS{{ else }}{{ .Title | upper }}{{ end }}">{{ if $isTags }}TAGS &amp; CATS{{ else }}{{ .Title | upper }}{{ end }}</h1>
+      <p class="page-sub">Every recovered file, indexed by tag and by category. Pick a channel and decode. Keep exploring, keep questioning. <span class="pglitch" style="--acc:#00e5ff">{{ partial "pico-svg.html" "eye" }}</span></p>
+    </header>
+
+    <!-- ===================== TAGS ===================== -->
+    <section class="section wrap no-top" aria-labelledby="tags-title">
+      <div class="sec-head">
+        <span class="sec-kicker">// BY TAG</span>
+        <h2 class="sec-title" id="tags-title">tags</h2>
+        <span class="sec-meta">{{ len .Site.Taxonomies.tags }} TAGS · {{ len (where .Site.RegularPages "Type" "posts") }} FILES</span>
+      </div>
+
+      <!-- quick tag cloud -->
+      <div class="tagcloud" style="margin-bottom:2.4rem">
+        {{ range $name, $taxonomy := .Site.Taxonomies.tags }}
+        <a href="#tag-{{ $name | urlize }}">{{ $name }} <span class="n">{{ len $taxonomy }}</span></a>
+        {{ end }}
+      </div>
+
+      {{ range $name, $taxonomy := .Site.Taxonomies.tags }}
+      {{ $slug := $name | urlize }}
+      <div class="tax-block" id="tag-{{ $slug }}">
+        <p class="tax-label" style="--acc:{{ index $tagAcc $slug | default "#00e5ff" }}"><span class="tax-ic">{{ partial "pixicon.html" $slug }}</span>#{{ $name }} <span class="n">({{ len $taxonomy }})</span></p>
+        <div class="posts">
+          {{ range $i, $entry := $taxonomy }}
+          {{ $p := $entry.Page }}
+          <article class="card">
+            <a class="card-link-cover" href="{{ $p.RelPermalink }}" aria-label="Recover: {{ $p.Title }}"></a>
+            <div class="card-meta"><span class="file">FILE_{{ printf "%02d" (add $i 1) }}.bin</span><time datetime="{{ $p.Date.Format "2006-01-02" }}">{{ $p.Date.Format "2006-01-02" }}</time></div>
+            <p class="card-series">{{ $p.Params.kicker }}</p>
+            <h3 class="card-title">{{ $p.Title }}</h3>
+            <a class="recover" href="{{ $p.RelPermalink }}">recover ↗</a>
+          </article>
+          {{ end }}
+        </div>
+      </div>
+      {{ end }}
+    </section>
+
+    <!-- ===================== CATEGORIES ===================== -->
+    {{/* Canonical channel list (matches the home "Explore More" cards) merged with
+         live taxonomy data: known channels always render (empty-state if no posts),
+         plus any extra categories that exist on posts but aren't in this list. */}}
+    {{ $known := slice
+        (dict "name" "Digital Forensics"  "desc" "// artefacts, timelines, and what the disk remembers")
+        (dict "name" "Threat Intel"       "desc" "// who's selling what, where, and for how much")
+        (dict "name" "Threat Hunting"     "desc" "// signals to watch for before the damage is done")
+        (dict "name" "Technology"         "desc" "// tooling, browsers, and the plumbing underneath")
+        (dict "name" "Malware"            "desc" "// payloads, behaviour, and how it gets in")
+        (dict "name" "Incident Response"  "desc" "// what to do once the second factor is the only thing left") }}
+    {{ $knownSlugs := slice }}
+    {{ range $known }}{{ $knownSlugs = $knownSlugs | append (.name | urlize) }}{{ end }}
+    {{ $cats := slice }}
+    {{ range $known }}{{ $cats = $cats | append . }}{{ end }}
+    {{ range $name, $tx := .Site.Taxonomies.categories }}
+      {{ if not (in $knownSlugs ($name | urlize)) }}{{ $cats = $cats | append (dict "name" (title $name) "desc" "") }}{{ end }}
+    {{ end }}
+    <section class="section wrap" aria-labelledby="cats-title">
+      <div class="sec-head">
+        <span class="sec-kicker">// EXPLORE MORE</span>
+        <h2 class="sec-title" id="cats-title">categories</h2>
+        <span class="sec-meta">{{ len $cats }} CHANNELS</span>
+      </div>
+
+      {{ range $cats }}
+      {{ $term := $.Site.GetPage (printf "/categories/%s" (.name | urlize)) }}
+      {{ $termPages := slice }}
+      {{ with $term }}{{ $termPages = .Pages }}{{ end }}
+      {{ $cslug := .name | urlize }}
+      <div class="tax-block" id="cat-{{ $cslug }}">
+        <p class="tax-label" style="--acc:{{ index $catAcc $cslug | default "#00e5ff" }}"><span class="tax-ic">{{ partial "pixicon.html" $cslug }}</span>{{ .name }} <span class="n">({{ len $termPages }})</span></p>
+        {{ with .desc }}<p class="tax-desc">{{ . }}</p>{{ end }}
+        {{ if gt (len $termPages) 0 }}
+        <div class="posts">
+          {{ range $i, $p := $termPages }}
+          <article class="card">
+            <a class="card-link-cover" href="{{ $p.RelPermalink }}" aria-label="Recover: {{ $p.Title }}"></a>
+            <div class="card-meta"><span class="file">FILE_{{ printf "%02d" (add $i 1) }}.bin</span><time datetime="{{ $p.Date.Format "2006-01-02" }}">{{ $p.Date.Format "2006-01-02" }}</time></div>
+            <p class="card-series">{{ $p.Params.kicker }}</p>
+            <h3 class="card-title">{{ $p.Title }}</h3>
+            <a class="recover" href="{{ $p.RelPermalink }}">recover ↗</a>
+          </article>
+          {{ end }}
+        </div>
+        {{ else }}
+        <div class="empty-state">
+          <span class="no-signal">// NO SIGNAL</span>
+          <p>no files indexed under this channel yet, keep watching</p>
+        </div>
+        {{ end }}
+      </div>
+      {{ end }}
+
+      <a class="back-link" href="{{ "/" | relLangURL }}">← back to home</a>
+    </section>
+  {{ end }}
+
+{{ else }}
+{{/* ============================ POSTS / WRITE-UPS LIST ============================ */}}
+  {{ $posts := where .Site.RegularPages "Type" "posts" }}
+    <header class="page-head wrap">
+      <p class="page-path">// <b>/var/log/writeups</b> · RECOVERING FILES</p>
+      <h1 class="page-title" data-text="RECOVERED&#10;FILES">RECOVERED FILES</h1>
+      <p class="page-sub">Files reconstructed from the signal. The rest are corrupted beyond recovery. Full archive of work-in-progress notes lives on Notion.</p>
+    </header>
+
+    <section class="section wrap" aria-labelledby="files-title">
+      <div class="sec-head">
+        <span class="sec-kicker">// INDEX</span>
+        <h2 class="sec-title" id="files-title">write-ups</h2>
+        <span class="sec-meta">{{ len $posts }} OK · 2 CORRUPTED</span>
+      </div>
+
+      <div class="posts">
+        {{ range $i, $p := $posts }}
+        <article class="card{{ if $p.Params.cover }} has-cover{{ end }}">
+          <a class="card-link-cover" href="{{ $p.RelPermalink }}" aria-label="Recover: {{ $p.Title }}"></a>
+          {{ with $p.Params.cover }}<img class="card-cover" src="{{ . | relURL }}" alt="" loading="lazy" decoding="async">{{ end }}
+          <div class="card-meta">
+            <span class="file">FILE_{{ printf "%02d" (add $i 1) }}.bin</span>
+            <time datetime="{{ $p.Date.Format "2006-01-02" }}">{{ $p.Date.Format "2006-01-02" }}</time>
+          </div>
+          <p class="card-series">{{ $p.Params.kicker }}</p>
+          <h3 class="card-title">{{ $p.Title }}</h3>
+          <p class="card-excerpt">{{ $p.Summary }}</p>
+          <div class="tags">
+            {{ range $p.Params.tags }}<span class="tag">{{ . }}</span>
+            {{ end }}
+          </div>
+          <a class="recover" href="{{ $p.RelPermalink }}">recover ↗</a>
+        </article>
+        {{ end }}
+
+        <!-- CORRUPTED PLACEHOLDER 1 -->
+        <article class="card corrupted" aria-disabled="true">
+          <div class="card-meta">
+            <span class="file">FILE_03.bin</span>
+            <span class="corrupt-tag">// CRC FAIL</span>
+          </div>
+          <p class="card-series">▚▚ ▚▚▚▚▚▚ ▚▚▚</p>
+          <h3 class="card-title">// CORRUPTED · unrecoverable</h3>
+          <p class="glyphs">7f45 4c46 0201 0100 ## %&amp; $@/\ ▚▒░ &#65533;&#65533;&#65533; data-block lost &#65533;&#65533;</p>
+        </article>
+
+        <!-- CORRUPTED PLACEHOLDER 2 -->
+        <article class="card corrupted" aria-disabled="true">
+          <div class="card-meta">
+            <span class="file">FILE_04.bin</span>
+            <span class="corrupt-tag">// CRC FAIL</span>
+          </div>
+          <p class="card-series">▚▚▚ ▚ ▚▚▚▚▚</p>
+          <h3 class="card-title">// CORRUPTED · unrecoverable</h3>
+          <p class="glyphs">de ad be ef 00 01 &lt;&gt;#%&amp; ▒░▚ &#65533;&#65533; sector unreadable &#65533;&#65533;&#65533; +*=|\</p>
+        </article>
+      </div>
+
+      <div class="links">
+        <a href="{{ "tags/" | relLangURL }}">Browse by tag &amp; category</a>
+        <a href="{{ .Site.Params.notion }}" target="_blank" rel="noopener noreferrer">Full archive on Notion</a>
+      </div>
+    </section>
+{{ end }}
+{{ end }}

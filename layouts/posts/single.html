@@ -1,0 +1,59 @@
+{{ define "title" }}a1ohadance // {{ .Title }}{{ end }}
+{{ define "main" }}
+   {{ with .Params.cover }}
+   <div class="post-cover-band wrap">
+     <figure class="post-cover">
+       <img src="{{ . | relURL }}" alt="{{ $.Params.coverAlt | default $.Title }}" loading="eager" decoding="async">
+     </figure>
+   </div>
+   {{ end }}
+
+   <div class="reading-layout">
+
+    <article class="reading">
+
+      <p class="post-meta">
+        <span class="file">RECOVERED</span>
+        {{ with .Params.kicker }}<span class="kicker">{{ . }}</span>{{ end }}
+        <time datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "2006-01-02" }}</time>
+        <span>by {{ .Params.author | default "Fitri Sultan" }}</span>
+        <!-- reading time: static fallback from Hugo; JS in app.js refines it from the real word count -->
+        <span class="read-time">· <span id="read-time">{{ .ReadingTime }} min read</span></span>
+      </p>
+
+      <h1 class="post-h1" data-text="{{ .Title }}">{{ .Title }}</h1>
+
+      {{ with .Params.tags }}
+      <div class="tags post-tags">
+        {{ range . }}<a class="tag" href="{{ "tags/" | relLangURL }}{{ . | urlize }}/">{{ . }}</a>
+        {{ end }}
+      </div>
+      {{ end }}
+
+      <!-- ===== TABLE OF CONTENTS (mobile / narrow): collapsible block.
+           Populated by app.js (wireTOC) from the article's h2/h3. Hidden by
+           CSS on wide screens, where the sticky sidebar version is shown. ===== -->
+      <nav aria-label="Table of contents">
+        <details class="post-toc toc-collapse">
+          <summary>Contents</summary>
+          <ul class="toc-list" data-toc-list></ul>
+        </details>
+      </nav>
+
+      <div class="prose">
+        {{ .Content }}
+      </div>
+
+      <a class="back-link" href="{{ "posts/" | relLangURL }}">← back to recovered files</a>
+
+    </article>
+
+    <!-- ===== TABLE OF CONTENTS (desktop): sticky sidebar.
+         Populated by app.js (wireTOC); shown only on wide screens. ===== -->
+    <nav class="post-toc toc-side" aria-label="Table of contents">
+      <p class="toc-head">Contents</p>
+      <ul class="toc-list" data-toc-list></ul>
+    </nav>
+
+   </div><!-- /.reading-layout -->
+{{ end }}

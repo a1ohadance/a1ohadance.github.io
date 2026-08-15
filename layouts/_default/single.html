@@ -1,0 +1,6 @@
+{{ define "title" }}{{ with .Params.metaTitle }}{{ . }}{{ else }}a1ohadance // {{ .Title }}{{ end }}{{ end }}
+{{ define "head" }}{{ with .Params.headExtra }}{{ . | safeHTML }}{{ end }}{{ end }}
+{{ define "bodyclass" }}{{ with .Params.bodyClass }} class="{{ . }}"{{ end }}{{ end }}
+{{ define "main" }}
+{{ .Content }}
+{{ end }}

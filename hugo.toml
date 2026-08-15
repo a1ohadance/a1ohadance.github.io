@@ -1,0 +1,32 @@
+baseURL = "https://ftri.my/"
+title = "a1ohadance — Fitri Sultan"
+languageCode = "en"
+enableRobotsTXT = true
+
+[pagination]
+  pagerSize = 10
+
+[taxonomies]
+  tag = "tags"
+  category = "categories"
+
+[markup]
+  [markup.goldmark]
+    [markup.goldmark.renderer]
+      unsafe = true
+  [markup.tableOfContents]
+    startLevel = 2
+    endLevel = 3
+
+[params]
+  author = "Muhammad Fitri Mohd Sultan"
+  handle = "a1ohadance"
+  github = "a1ohadance"
+  githubURL = "https://github.com/a1ohadance"
+  email = "ping@fitrisultan.my"
+  linkedin = "https://www.linkedin.com/in/ftrisultan"
+  ngl = "https://ngl.link/fitrisultan"
+  coffee = "https://buymeacoffee.com/ftrisultan"
+  notion = "https://www.notion.so/4loha/Personal-Write-Up-26cee4130d8e80a3868cc98154289ea9"
+  tagline = "Threat Hunter & Researcher @ MyCERT · Malaysia"
+  description = "Fitri Sultan (a1ohadance) — malware analysis, info-stealers, DFIR, threat intelligence. Write-ups on info-stealers and stolen credentials."
